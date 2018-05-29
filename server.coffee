@@ -1,4 +1,3 @@
-
 'use strict'
 
 URLHandlers = require './scripts/URLHandlers.js'

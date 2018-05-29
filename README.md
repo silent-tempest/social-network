@@ -3,6 +3,10 @@
 
 A social network written without Express.
 
+### Install dependencies
+
+`npm i`
+
 ### Run
 
 `nodemon -w server.js server.js`
