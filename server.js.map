@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "server.js",
+  "sourceRoot": "",
+  "sources": [
+    "server.coffee"
+  ],
+  "names": [],
+  "mappings": ";AACA;EAAA;AAAA,MAAA,WAAA,EAAA,EAAA,EAAA,QAAA,EAAA,IAAA,EAAA,MAAA,EAAA;;EAEA,WAAA,GAAc,OAAA,CAAQ,0BAAR;;EACd,QAAA,GAAc,OAAA,CAAQ,uBAAR;;EACd,IAAA,GAAc,OAAA,CAAQ,MAAR;;EACd,EAAA,GAAc,OAAA,CAAQ,IAAR;;EAEd,QAAA,GAAW,IAAI,WAAJ,CAAA,CACT,CAAC,GADQ,CACJ,KADI,EACG,GADH,EACQ,QAAA,CAAE,GAAF,EAAO,GAAP,CAAA;IACf,GAAG,CAAC,SAAJ,CAAc,GAAd,EAAmB;MAAA,cAAA,EAAgB;IAAhB,CAAnB;WACA,GAAG,CAAC,GAAJ,CAAQ,QAAR;EAFe,CADR,CAKT,CAAC,GALQ,CAKJ,KALI,EAKG,QALH,EAKa,QAAA,CAAE,GAAF,EAAO,GAAP,CAAA;IACpB,GAAG,CAAC,SAAJ,CAAc,GAAd,EAAmB;MAAA,cAAA,EAAgB;IAAhB,CAAnB;WACA,GAAG,CAAC,GAAJ,CAAQ,GAAG,CAAC,MAAM,CAAC,IAAnB;EAFoB,CALb;;EASX,MAAA,GAAS,IAAI,CAAC,YAAL,CAAkB,QAAA,CAAE,GAAF,EAAO,GAAP,CAAA;AACzB,QAAA;IAAA,IAAG,CAAE,OAAA,GAAU,QAAQ,CAAC,MAAT,CAAgB,GAAhB,EAAqB,GAArB,CAAZ,CAAH;aACE,OAAA,CAAQ,GAAR,EAAa,GAAb,EADF;KAAA,MAAA;AAAA;;EADyB,CAAlB,EAhBT;;;EAsBA,MAAM,CAAC,MAAP,CAAc,IAAd,EAAoB,QAAA,CAAA,CAAA;WAClB,OAAO,CAAC,GAAR,CAAY,uCAAZ;EADkB,CAApB;AAtBA",
+  "sourcesContent": [
+    "\n'use strict'\n\nURLHandlers = require './scripts/URLHandlers.js'\ntemplate    = require './scripts/template.js'\nhttp        = require 'http'\nfs          = require 'fs'\n\nhandlers = new URLHandlers()\n  .add 'GET', '/', ( req, res ) ->\n    res.writeHead 200, 'Content-Type': 'text/html'\n    res.end 'Hello.'\n\n  .add 'GET', '/:name', ( req, res ) ->\n    res.writeHead 200, 'Content-Type': 'text/html'\n    res.end req.params.name\n\nserver = http.createServer ( req, res ) ->\n  if ( handler = handlers.handle req, res )\n    handler req, res\n  else\n    # send an error\n\nserver.listen 9000, ->\n  console.log 'Listening \"http://localhost:9000/\"...'\n"
+  ]
+}

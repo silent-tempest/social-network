@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "template.js",
+  "sourceRoot": "..",
+  "sources": [
+    "scripts/coffee/template.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;EAAA;EAEA;AAFA,MAAA,QAAA,EAAA,CAAA,EAAA;;EAIA,EAAA,GAAK,OAAA,CAAQ,IAAR;;EACL,CAAA,GAAK,OAAA,CAAQ,YAAR;;EAEL,MAAM,CAAC,OAAP,GAAiB,QAAA,CAAE,IAAF,EAAQ,MAAR,EAAgB,QAAhB,CAAA;AACf,WAAO,IAAI,QAAJ,CAAa,IAAb,EAAmB,MAAnB,EAA2B,QAA3B;EADQ;;EAGjB,MAAM,CAAC,OAAO,CAAC,QAAf,GAAgC;IAAN,MAAA,SAAA;MACxB,WAAa,MAAA,SAAA,EAAkB,QAAlB,CAAA;QAAE,IAAC,CAAA;QAAM,IAAC,CAAA;QACrB,IAAG,OAAO,QAAP,KAAmB,QAAtB;UACE,IAAC,CAAA,QAAD,GAAY;YAAA,QAAA,EAAU;UAAV,EADd;SAAA,MAAA;UAGE,IAAC,CAAA,QAAD,GAAY,QAAA,IAAY,MAAM,CAAC,MAAP,CAAc,CAAA,CAAd,EAAkB,QAAQ,CAAC,QAA3B,EAH1B;;QAKA,IAAC,CAAA,KAAD,GAAS,CAAA;MANE;;MAQb,IAAM,CAAE,IAAF,CAAA;eACJ,CAAC,CAAC,QAAF,CAAW,EAAE,CAAC,YAAH,CAAiB,IAAjB,EAAuB,MAAvB,CAAX,EAA4C,IAAC,CAAA,QAA7C;MADI;;MAGN,OAAS,CAAE,IAAF,EAAQ,IAAR,CAAA;QACP,IAAA,GAAO,IAAC,CAAA,IAAD,GAAQ;QAEf,IAAA,CAAA,CAAO,IAAA,IAAQ,IAAC,CAAA,KAAhB,CAAA;UACE,IAAC,CAAA,KAAO,CAAA,IAAA,CAAR,GAAiB,IAAC,CAAA,IAAD,CAAM,IAAN,EADnB;;eAGA,IAAC,CAAA,KAAO,CAAA,IAAA,CAAM,CAAC,IAAf,CAAoB,IAApB,EAA0B,IAA1B;MANO;;MAQT,MAAQ,CAAE,IAAF,EAAQ,IAAR,CAAA;QACN,IAAI,CAAC,OAAL,GAAe,IAAC,CAAA,OAAD,CAAS,IAAT,EAAe,IAAf;eACf,IAAC,CAAA,OAAD,CAAS,IAAC,CAAA,MAAV,EAAkB,IAAlB;MAFM;;IApBgB;;IAwBxB,QAAC,CAAA,QAAD,GACE;MAAA,QAAA,EAAU;IAAV;;;;;AAnCJ",
+  "sourcesContent": [
+    "# Based on JSDoc template.js\n\n'use strict'\n\nfs = require 'fs'\n_  = require 'underscore'\n\nmodule.exports = ( path, layout, settings ) ->\n  return new Template path, layout, settings\n\nmodule.exports.Template = class Template\n  constructor: ( @path, @layout, settings ) ->\n    if typeof settings is 'string'\n      @settings = variable: settings\n    else\n      @settings = settings or Object.assign {}, Template.settings\n\n    @cache = {}\n\n  load: ( path ) ->\n    _.template fs.readFileSync( path, 'utf8' ), @settings\n\n  partial: ( path, data ) ->\n    path = @path + path\n\n    unless path of @cache\n      @cache[ path ] = @load path\n\n    @cache[ path ].call this, data\n\n  render: ( path, data ) ->\n    data.content = @partial path, data\n    @partial @layout, data\n\n  @settings:\n    variable: 'data'\n"
+  ]
+}

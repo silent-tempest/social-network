@@ -1,0 +1,19 @@
+{
+  "name": "social-network",
+  "version": "0.0.1",
+  "description": "A social network.",
+  "main": "server.js",
+  "scripts": {
+    "test": "nodemon -w server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silent-tempest/social-net.git"
+  },
+  "author": "SILENT",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/silent-tempest/social-net/issues"
+  },
+  "homepage": "https://github.com/silent-tempest/social-net#readme"
+}
