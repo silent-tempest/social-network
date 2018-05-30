@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "File.js",
+  "sourceRoot": "../..",
+  "sources": [
+    "coffee/File.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;EAAA;AAAA,MAAA;;EAEA,EAAA,GAAK,OAAA,CAAQ,IAAR;;EAEL,MAAM,CAAC,OAAP,GAAiB,MAAA;IACf,WAAa,KAAA,CAAA;MAAE,IAAC,CAAA;MACd,IAAC,CAAA,MAAD,GAAU;IADC;;IAGb,IAAM,CAAA,CAAA;MACJ,IAAA,CAAO,IAAC,CAAA,MAAR;QACE,IAAG,EAAE,CAAC,UAAH,CAAc,IAAC,CAAA,IAAf,CAAH;UACE,IAAC,CAAA,OAAD,GAAW,EAAE,CAAC,YAAH,CAAgB,IAAC,CAAA,IAAjB,EAAuB,MAAvB;UACX,IAAC,CAAA,MAAD,GAAU,KAFZ;SAAA,MAAA;UAIE,IAAC,CAAA,OAAD,GAAW,GAJb;SADF;;aAOA,IAAC,CAAA;IARG;;IAUN,KAAO,CAAE,OAAF,CAAA,EAAA;;aAEL,EAAE,CAAC,aAAH,CAAiB,IAAC,CAAA,IAAlB,EAAwB,IAAC,CAAA,OAAD,GAAW,OAAnC;IAFK;;EAdQ;AAJjB",
+  "sourcesContent": [
+    "'use strict'\n\nfs = require 'fs'\n\nmodule.exports = class\n  constructor: ( @path ) ->\n    @loaded = false\n\n  read: ->\n    unless @loaded\n      if fs.existsSync @path\n        @content = fs.readFileSync @path, 'utf8'\n        @loaded = true\n      else\n        @content = ''\n\n    @content\n\n  write: ( content ) ->\n    # i think that better is to reset cache\n    fs.writeFileSync @path, @content = content\n"
+  ]
+}
