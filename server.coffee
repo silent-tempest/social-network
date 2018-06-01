@@ -5,7 +5,7 @@ FileStream  = require './coffee/compiled/FileStream.js'
 Template    = require './coffee/compiled/Template.js'
 http        = require 'http'
 
-stream = new FileStream './data/'
+stream = new FileStream 'data'
 layout = new Template 'views', 'layout'
 
 unless stream.file 'profiles.json'
@@ -29,6 +29,8 @@ handlers = new URLHandlers()
       res.end layout.render 'error', status: 404, message: 'Unknown profile.'
 
 server = http.createServer ( req, res ) ->
+  req.url = handlers.parseURL req
+
   if ( handler = handlers.handle req, res )
     handler req, res
   else

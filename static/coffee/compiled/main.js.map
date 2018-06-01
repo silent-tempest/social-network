@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "main.js",
+  "sourceRoot": "../../..",
+  "sources": [
+    "static/coffee/main.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;EAAA;EAEA,OAAO,CAAC,GAAR,CAAY,kBAAZ;AAFA",
+  "sourcesContent": [
+    "'use strict'\n\nconsole.log 'Ich heiße SILENT'\n"
+  ]
+}

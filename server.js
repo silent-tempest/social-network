@@ -11,7 +11,7 @@
 
   http = require('http');
 
-  stream = new FileStream('./data/');
+  stream = new FileStream('data');
 
   layout = new Template('views', 'layout');
 
@@ -45,6 +45,7 @@
 
   server = http.createServer(function(req, res) {
     var handler;
+    req.url = handlers.parseURL(req);
     if ((handler = handlers.handle(req, res))) {
       return handler(req, res);
     } else {

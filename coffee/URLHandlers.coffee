@@ -1,6 +1,8 @@
 'use strict'
 
+mime = require 'mime'
 path = require 'path'
+url  = require 'url'
 fs   = require 'fs'
 
 module.exports = class
@@ -37,20 +39,29 @@ module.exports = class
 
       return handler
 
+  parseURL: ( req ) ->
+    # console.log url.parse req.url
+
+    if req.headers.referer
+      # match protocol and host
+      return req.url.slice req.headers.referer.replace( /^(?:[a-z]+:\/\/)(?:[\w.]+(?::\d+)?)/gi, '' ).length
+
+    return req.url
+
 module.exports.static = ( scope ) ->
   ( req, res ) ->
-    url = path.join scope, req.url
+    filepath = path.join scope, req.url
 
-    if /\.([a-z\-]+)$/i.exec url and RegExp.$1 of mime
-      headers = 'Content-Type': mime[ RegExp.$1 ]
+    if ( type = mime.getType filepath )
+      headers = 'Content-Type': type
 
-    fs.access url, fs.constants.F_OK | fs.constants.R_OK, ( err ) ->
+    fs.access filepath, fs.constants.F_OK | fs.constants.R_OK, ( err ) ->
       if err
         res.writeHead 404, headers
         res.end()
         return
 
-      fs.readFile url, 'utf8', ( err, data ) ->
+      fs.readFile filepath, 'utf8', ( err, data ) ->
         if err
           res.writeHead 404, headers
           res.end()

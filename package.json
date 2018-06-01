@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/silent-tempest/social-net#readme",
   "dependencies": {
+    "mime": "^2.3.1",
     "underscore": "^1.9.0"
   }
 }

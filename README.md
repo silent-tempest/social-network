@@ -6,7 +6,9 @@ A social network written without [Express](http://expressjs.com/).
 
 ##### Install Dependencies
 
-Install [underscore.js](http://underscorejs.org/) for [templating](http://underscorejs.org/#template).
+Install [underscore](http://underscorejs.org/) for [templating](http://underscorejs.org/#template).
+
+Install [mime](https://github.com/broofa/node-mime) to determine the MIME type of a static file.
 
 `npm i`
 
