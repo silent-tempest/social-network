@@ -2,7 +2,7 @@
 
 fs = require 'fs'
 
-module.exports = class
+class File
   constructor: ( @path ) ->
     @loaded = false
 
@@ -14,8 +14,9 @@ module.exports = class
       else
         @content = ''
 
-    @content
+    return @content
 
   write: ( content ) ->
-    # i think that better is to reset cache
     fs.writeFileSync @path, @content = content
+
+module.exports = File

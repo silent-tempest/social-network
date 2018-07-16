@@ -6,8 +6,8 @@
     "static/coffee/main.coffee"
   ],
   "names": [],
-  "mappings": ";AAAA;EAAA;EAEA,OAAO,CAAC,GAAR,CAAY,kBAAZ;AAFA",
+  "mappings": ";AAAA;EAAA;EAEA,OAAO,CAAC,GAAR,CAAY,oCAAZ;AAFA",
   "sourcesContent": [
-    "'use strict'\n\nconsole.log 'Ich heiße SILENT'\n"
+    "'use strict'\n\nconsole.log 'The main script has been included.'\n"
   ]
 }

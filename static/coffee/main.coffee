@@ -1,3 +1,3 @@
 'use strict'
 
-console.log 'Ich heiße SILENT'
+console.log 'The main script has been included.'

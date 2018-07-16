@@ -6,7 +6,7 @@ path = require 'path'
 fs   = require 'fs'
 _    = require 'underscore'
 
-module.exports = class
+class Template
   constructor: ( @scope, @layout, settings ) ->
     if typeof settings is 'string'
       @settings = variable: settings
@@ -32,3 +32,5 @@ module.exports = class
 
   @settings:
     variable: 'data'
+
+module.exports = Template

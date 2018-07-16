@@ -1,9 +1,10 @@
 'use strict'
 
-File = require './File.js'
 path = require 'path'
 
-module.exports = class
+File = require './File'
+
+class FileStream
   constructor: ( @scope ) ->
     @cache = {}
 
@@ -13,7 +14,9 @@ module.exports = class
     unless filepath of @cache
       @cache[ filepath ] = new File filepath
 
-    if content?
-      @cache[ filepath ].write content
-    else
-      @cache[ filepath ].read()
+    unless content?
+      return @cache[ filepath ].read()
+
+    @cache[ filepath ].write content
+
+module.exports = FileStream

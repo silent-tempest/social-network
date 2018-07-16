@@ -1,40 +1,18 @@
 'use strict'
 
-URLHandlers = require './coffee/compiled/URLHandlers.js'
-FileStream  = require './coffee/compiled/FileStream.js'
-Template    = require './coffee/compiled/Template.js'
-http        = require 'http'
+http     = require 'http'
 
-stream = new FileStream 'data'
-layout = new Template 'views', 'layout'
-
-unless stream.file 'profiles.json'
-  stream.file 'profiles.json', '{}'
-
-handlers = new URLHandlers()
-  .add 'GET', /\.[a-z\-]+$/i, URLHandlers.static 'static'
-
-  .add 'GET', '/', ( req, res ) ->
-    res.writeHead 200, 'Content-Type': 'text/html'
-    res.end 'Hello.'
-
-  .add 'GET', '/profile/:id', ( req, res ) ->
-    profiles = JSON.parse stream.file 'profiles.json'
-
-    if req.params.id of profiles
-      res.writeHead 200, 'Content-Type': 'text/html'
-      res.end layout.render 'profile', profiles[ req.params.id ]
-    else
-      res.writeHead 404, 'Content-Type': 'text/html'
-      res.end layout.render 'error', status: 404, message: 'Unknown profile.'
+redirect = require './coffee/redirect'
+router   = require './coffee/router'
 
 server = http.createServer ( req, res ) ->
-  req.url = handlers.parseURL req
-
-  if ( handler = handlers.handle req, res )
-    handler req, res
+  if req.url[ req.url.length - 1 ] isnt '/'
+    redirect res, req.url + '/'
+  else if ( route = router.handle req )
+    route.process req
+    route.handler req, res
   else
-    # send an error
+    redirect res, '404'
 
 server.listen 9000, ->
   console.log 'Listening "http://localhost:9000/"...'

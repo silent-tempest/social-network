@@ -20,21 +20,11 @@ If you will write some [CoffeeScript](https://coffeescript.org) in the project y
 
 ##### Install [Nodemon](https://nodemon.io)
 
-[Nodemon](https://nodemon.io) will automatically restart the server when it is changed.
+[Nodemon](https://nodemon.io) will automatically restart the server on change.
 
 `npm i -g nodemon`
 
 ### Compile [CoffeeScript](https://coffeescript.org)
-
-The `-w` (`--watch`) flag means that coffee will watch changes of the files.
-
-The `-m` (`--map`) flag means that coffee will create a source map.
-
-[Read about the flags](https://coffeescript.org/#cli).
-
-`coffee -wm -o ./ ./server.coffee`
-
-`coffee -wm -o ./coffee/compiled ./coffee`
 
 `coffee -wm -o ./static/coffee/compiled ./static/coffee`
 
@@ -42,8 +32,8 @@ The `-m` (`--map`) flag means that coffee will create a source map.
 
 ##### Run with [Nodemon](https://nodemon.io)
 
-`nodemon server.js`
+`nodemon server.coffee`
 
 ##### Or without
 
-`node server.js`
+`coffee server.coffee`
