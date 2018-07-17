@@ -14,9 +14,11 @@ class FileStream
     unless filepath of @cache
       @cache[ filepath ] = new File filepath
 
-    unless content?
+    unless content ?
       return @cache[ filepath ].read()
 
     @cache[ filepath ].write content
+
+  json: ( filepath, content ) -> null
 
 module.exports = FileStream
