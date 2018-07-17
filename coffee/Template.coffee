@@ -1,5 +1,7 @@
 # Based on JSDoc template.js
 
+# See an example at ./Template.md
+
 'use strict'
 
 path = require 'path'
@@ -11,7 +13,7 @@ class Template
     if typeof settings is 'string'
       @settings = variable: settings
     else
-      @settings = settings or Object.assign {}, module.exports.settings
+      @settings = settings or Object.assign {}, Template.settings
 
     @cache = {}
 

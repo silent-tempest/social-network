@@ -18,8 +18,8 @@ signup.onsubmit = ( event ) ->
     error: ->
       console.error 'Error %d: "%s"', @status, @statusText
 
-    # headers:
-    #   'Content-Type': 'application/json'
+    headers:
+      'Content-Type': 'application/json'
 
     data: data
 

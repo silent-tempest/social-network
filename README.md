@@ -6,34 +6,28 @@ A social network written without [Express](http://expressjs.com/).
 
 ##### Install Dependencies
 
+`$ npm i`
+
 Install [underscore](http://underscorejs.org/) for [templating](http://underscorejs.org/#template).
 
 Install [mime](https://github.com/broofa/node-mime) to determine the MIME type of a static file.
 
-`npm i`
+Install [peako](https://github.com/silent-tempest/Peako/tree/dev) to use ajax on a client.
+
+Install [qs](https://www.npmjs.com/package/qs) to parse URL query or request's urlencoded body.
 
 ##### Install [CoffeeScript](https://coffeescript.org)
 
-If you will write some [CoffeeScript](https://coffeescript.org) in the project you need to compile it.
+`$ npm i -g coffeescript`
 
-`npm i -g coffeescript`
+### Compile Static [CoffeeScript](https://coffeescript.org)
 
-##### Install [Nodemon](https://nodemon.io)
-
-[Nodemon](https://nodemon.io) will automatically restart the server on change.
-
-`npm i -g nodemon`
-
-### Compile [CoffeeScript](https://coffeescript.org)
-
-`coffee -wm -o ./static/coffee/compiled ./static/coffee`
+`$ make`
 
 ### Run
 
-##### Run with [Nodemon](https://nodemon.io)
-
-`nodemon server.coffee`
-
-##### Or without
-
 `coffee server.coffee`
+
+### NOTES
+
+The `Template`, `File`, and `FileManager` classes use caching, so, be careful. Files to be cached: in the `views/`, in the `data/`

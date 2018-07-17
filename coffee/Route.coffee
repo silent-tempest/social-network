@@ -1,9 +1,7 @@
 'use strict'
 
-qs = require 'qs'
-
 class Route
-  constructor: ( @method, pattern, @handler ) ->
+  constructor: ( @method, pattern, @handler, @router ) ->
     params = []
 
     if typeof pattern is 'string'
@@ -15,10 +13,8 @@ class Route
 
         return '([^/]+?)'
 
-      regex = '^' + regex + '/?'
-
-      pattern = RegExp regex + '$'
-      @_pattern = RegExp regex
+      pattern   = RegExp '^' + regex + '/?$'
+      @_pattern = RegExp '^' + regex + '/?'
 
     @pattern = pattern
     @params  = params
@@ -27,31 +23,36 @@ class Route
     return @method is req.method and @pattern.test url
 
   process: ( req, url = req.url ) ->
-    match = @pattern.exec url
+    return new Promise ( res, rej ) =>
+      req.params = {}
+      req.body   = ''
 
-    req.params = {}
+      if @params.length
+        match = @pattern.exec url
 
-    for i in [ 0 ... @params.length ]
-      req.params[ @params[ i ] ] = match[ i + 1 ]
+        for i in [ 0 ... @params.length ]
+          req.params[ @params[ i ] ] = match[ i + 1 ]
 
-    req.body = []
+      if req.method isnt 'POST'
+        return res()
 
-    if req.method isnt 'POST'
-      return Promise.resolve()
-
-    return new Promise ( res, rej ) ->
       req.on 'data', ( chunk ) ->
-        req.body.push chunk
+        req.body += chunk
 
-      req.on 'end', ->
-        req.body = Buffer.concat( req.body ).toString()
+        if req.body.length >= 1e6
+          req.connection.destroy()
+          rej 413
 
-        if req.headers[ 'content-type' ]
-          if ! req.headers[ 'content-type' ].indexOf 'application/json'
-            req.body = JSON.parse req.body
-          else if ! req.headers[ 'content-type' ].indexOf 'application/x-www-form-urlencoded'
-            req.body = qs.parse req.body
+      req.on 'end', =>
+        try
+          if @router.config.body and ( ContentType = req.headers[ 'content-type' ] )
+            for type, parse of @router.config.body
+              if hasOwnProperty.call( @router.config.body, type ) and ! ContentType.indexOf type
+                req.body = parse req.body
+                break
 
-        res()
+          res()
+        catch ex
+          rej 400
 
 module.exports = Route

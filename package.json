@@ -18,9 +18,9 @@
   "homepage": "https://github.com/silent-tempest/social-network#readme",
   "dependencies": {
     "mime": "^2.3.1",
-    "underscore": "^1.9.0",
     "peako": "^0.0.1",
-    "qs": "^0.0.1"
+    "qs": "^6.5.2",
+    "underscore": "^1.9.0"
   },
   "devDependencies": {}
 }

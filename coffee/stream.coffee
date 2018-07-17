@@ -1,8 +1,8 @@
 'use strict'
 
-stream = new ( require './FileStream' ) 'data'
+stream = new ( require './FileManager' ) 'data'
 
-if ! stream.file 'data.json'
-  stream.file 'data.json', '{"profiles":[]}'
+if ! stream.get 'data.json'
+  stream.set 'data.json', '{"profiles":[]}'
 
 module.exports = stream

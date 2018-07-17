@@ -1,5 +1,7 @@
 'use strict'
 
+qs       = require 'qs'
+
 redirect = require './redirect'
 Router   = require './Router'
 layout   = require './layout'
@@ -9,7 +11,12 @@ renderHTML = ( res, name, status, data = {} ) ->
   res.writeHead status, 'Content-Type': 'text/html'
   res.end layout.render name, data
 
-router = new Router()
+router = new Router
+  body:
+    'application/json':                  JSON.parse
+    'application/x-www-form-urlencoded': qs.parse
+
+  query: qs.parse
 
 router.get '/', ( req, res ) ->
   renderHTML res, 'index', 200
@@ -18,7 +25,7 @@ router.get '/404', ( req, res ) ->
   renderHTML res, '404', 404
 
 router.get '/profile/:id', ( req, res ) ->
-  profiles = JSON.parse stream.file 'profiles.json'
+  profiles = JSON.parse stream.get 'profiles.json'
 
   if profiles[ req.params.id ]
     renderHTML res, 'profile', 200, profiles[ req.params.id ]
@@ -26,14 +33,14 @@ router.get '/profile/:id', ( req, res ) ->
     redirect res, '/404/'
 
 router.post '/sign-up', ( req, res ) ->
-  data = JSON.parse stream.file 'data.json'
+  data = JSON.parse stream.get 'data.json'
 
   if data.profiles.find ( { username } ) -> username is req.body.username
     res.writeHead 409, 'Content-Type': 'text/plain'
     res.end "\"#{req.body.username}\" user already exists! change the username to another one."
   else
     data.profiles.push req.body
-    stream.file 'data.json', JSON.stringify data
+    stream.set 'data.json', JSON.stringify data
     res.writeHead 200, 'Content-Type': 'text/plain'
     res.end "\"#{req.body.username}\" account was created! url: localhost:9000/profile/#{data.profiles.length - 1}"
 

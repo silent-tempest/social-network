@@ -6,8 +6,8 @@ class File
   constructor: ( @path ) ->
     @loaded = false
 
-  read: ->
-    unless @loaded
+  get: ->
+    if ! @loaded
       if fs.existsSync @path
         @content = fs.readFileSync @path, 'utf8'
         @loaded = true
@@ -16,7 +16,7 @@ class File
 
     return @content
 
-  write: ( content ) ->
+  set: ( content ) ->
     fs.writeFileSync @path, @content = content
 
 module.exports = File

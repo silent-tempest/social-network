@@ -7,7 +7,7 @@ fs    = require 'fs'
 Route = require './Route'
 
 class Router
-  constructor: ->
+  constructor: ( @config = {} ) ->
     @routes = []
 
   handle: ( req, url = req.url ) ->
@@ -58,9 +58,20 @@ class Router
 
     return this
 
+  process: ( req ) ->
+    if ( match = /\?(.*)$/.exec req.url )
+      if @config.query
+        req.query = @config.query req.rawQuery = RegExp.$1
+      else
+        req.query = req.rawQuery = RegExp.$1
+
+      req.url = req.url.slice 0, match.index
+    else
+      req.query = req.rawQuery = ''
+
 [ 'GET', 'POST' ].forEach ( method ) ->
   Router::[ method.toLowerCase() ] = ( pattern, handler ) ->
-    @routes.push new Route method, pattern, handler
+    @routes.push new Route method, pattern, handler, this
     return this
 
 module.exports = Router
