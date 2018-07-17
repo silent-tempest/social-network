@@ -9,7 +9,10 @@ server = http.createServer ( req, res ) ->
   router.process req
 
   if req.method is 'GET' and req.url[ req.url.length - 1 ] isnt '/'
-    redirect res, req.url + '/' + req.rawQuery
+    if req.rawQuery
+      redirect res, req.url + '/?' + req.rawQuery
+    else
+      redirect res, req.url + '/'
   else if ( route = router.handle req )
     route.process req
       .then ->
