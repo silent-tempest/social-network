@@ -25,10 +25,10 @@ router.get '/404', ( req, res ) ->
   renderHTML res, '404', 404
 
 router.get '/profile/:id', ( req, res ) ->
-  profiles = JSON.parse stream.get 'profiles.json'
+  data = JSON.parse stream.get 'data.json'
 
-  if profiles[ req.params.id ]
-    renderHTML res, 'profile', 200, profiles[ req.params.id ]
+  if data.profiles[ req.params.id ]
+    renderHTML res, 'profile', 200, data.profiles[ req.params.id ]
   else
     redirect res, '/404/'
 

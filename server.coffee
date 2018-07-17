@@ -15,12 +15,19 @@ server = http.createServer ( req, res ) ->
       .then ->
         route.handler req, res
       .catch ( statusCode ) ->
+        if typeof statusCode isnt 'number'
+          return Promise.reject statusCode
+
         res.writeHead statusCode, 'Content-Type': 'text/plain'
 
         if statusCode is 413
           req.connection.destroy()
         else
           res.end()
+      .catch ( error ) ->
+        res.writeHead 500, 'Content-Type': 'text/plain'
+        res.end()
+        console.log error
   else
     redirect res, '/404/'
 
