@@ -33,13 +33,10 @@ route.get( function ( req, res ) {
       }
     } )
     .then( function () {
-      res.writeHead( 200, {
-        'Content-Type': 'text/html'
-      } );
+      res.statusCode = 200;
+      res.setHeader( 'Content-Type', 'text/html; charset=UTF-8' );
 
-      res.end( layout.render( 'login', null, [
-        layout.link( './styles/material-design-components/build/index.min.css' )
-      ], [
+      res.end( layout.render( 'login', null, null, [
         layout.script( './build/login.js' )
       ] ) );
     } )

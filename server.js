@@ -2,28 +2,36 @@
 
 var https       = require( 'https' ),
     http        = require( 'http' ),
-    fs          = require( 'fs' ),
     parseCookie = require( './scripts/parse-cookie' ),
     parseQuery  = require( './scripts/parse-query' ),
-    router      = require( './scripts/router' );
+    router      = require( './scripts/router' ),
+    write       = require( './scripts/write' ),
+    read        = require( './scripts/read' );
 
-var options = {
-  cert: fs.readFileSync( './server-certificate.cert' ),
-  key:  fs.readFileSync( './server-key.key' )
-};
+var options;
 
-if ( ! fs.readFileSync( './data/users.json', 'utf8' ) ) {
-  fs.writeFileSync( './data/users.json', '[]' );
-}
+Promise.all( [
+  read( './server-certificate.cert' ),
+  read( './server-key.key' ),
+  read( './data/users.json' )
+] )
+  .then( function ( data ) {
+    options = {
+      cert: data[ 0 ],
+      key:  data[ 1 ]
+    };
 
-http.ServerResponse.prototype.redirect = function redirect ( Location ) {
-  this.statusCode = 302;
-  this.setHeader( 'Location', Location );
-  this.end();
-};
+    if ( ! data[ 2 ] ) {
+      return write( './data/users.json', '[]' );
+    }
+  } )
+  .then( function () {
+    https.createServer( options, listener ).listen( 9000, function () {
+      console.log( 'listening on "https://localhost:9000/"...' );
+    } );
+  } );
 
-var server = https.createServer( options, function ( req, res ) {
-
+function listener ( req, res ) {
   var route;
 
   parseCookie( req );
@@ -57,9 +65,10 @@ var server = https.createServer( options, function ( req, res ) {
       res.end();
     }
   } );
+}
 
-} );
-
-server.listen( 9000, function () {
-  console.log( 'listening on "https://localhost:9000/"...' );
-} );
+http.ServerResponse.prototype.redirect = function redirect ( Location ) {
+  this.statusCode = 302;
+  this.setHeader( 'Location', Location );
+  this.end();
+};
