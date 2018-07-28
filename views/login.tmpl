@@ -1,11 +1,22 @@
 <h1>Log In</h1>
 
 <form id="login">
-  <label for="username">Username: </label>
-  <input id="username" type="text" required="" />
-  <label for="password">Password: </label>
-  <input id="password" type="password" required="" />
-  <button id="submit">OK</button>
+
+  <div class="input-group light blue">
+    <input id="username" type="text" required="" />
+    <label for="username">Username</label>
+    <hr />
+    <hr class="input-highlight" />
+  </div>
+
+  <div class="input-group light blue">
+    <input id="password" type="password" required="" />
+    <label for="password">Password</label>
+    <hr />
+    <hr class="input-highlight" />
+  </div>
+
+  <button class="raised-button" id="submit">OK</button>
 </form>
 
 <p id="message"></p>

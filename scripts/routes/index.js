@@ -12,7 +12,7 @@ module.exports = new Route( '/' ).get( function ( req, res ) {
   res.end( layout.render( 'index', null, [
     layout.link( './styles/material-design-components/build/index.min.css' )
   ], [
-    layout.script( './build/main.js' )
+    layout.script( './build/signup.js' )
   ] ) );
 
 } );

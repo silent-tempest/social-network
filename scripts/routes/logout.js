@@ -1,9 +1,7 @@
 'use strict';
 
-var crypto  = require( 'crypto' ),
-    find    = require( 'peako/find' ),
+var find    = require( 'peako/find' ),
     Route   = require( '../Route' ),
-    layout  = require( '../layout' ),
     read    = require( '../read' ),
     write   = require( '../write' );
 
@@ -53,7 +51,7 @@ route.get( function ( req, res ) {
       res.setHeader( 'Set-Cookie', cookie );
       res.redirect( '/login/' );
     } )
-    .catch( function ( e ) {
+    .catch( function () {
       res.redirect( '/wrong/?status=500' );
     } );
 

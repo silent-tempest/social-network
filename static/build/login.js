@@ -1702,38 +1702,40 @@ module.exports = require('./create/create-first')('toUpperCase');
 var ajax = require( 'peako/ajax' ),
     _    = require( 'peako/_' );
 
-login.onsubmit = function onsubmit ( event ) {
-
+_( '#login' ).submit( function ( event ) {
   var data = {
-    username: username.value,
-    password: password.value
+    password: _( '#password' ).value(),
+    username: _( '#username' ).value()
   };
 
   var headers = {
     'Content-Type': 'application/json'
   };
 
-  function success ( d ) {
-    message.innerHTML = 'success';
+  // jshint validthis: true
+
+  function success () {
+    _( '#message' ).html( 'success' );
   }
 
-  function error ( data ) {
-    if ( data.selector ) {
-      _( data.selector ).css( 'color', 'red' );
+  function error ( d ) {
+    if ( d.selector ) {
+      _( d.selector ).css( 'color', 'red' );
     }
 
-    message.innerHTML = data.message || 'Error ' + this.status + ': "' + this.statusText + '"';
+    _( '#message' ).html( d.message || 'Error ' + this.status + ': "' + this.statusText + '"' );
   }
+
+  // jshint validthis: false
 
   ajax( '/login', {
     headers: headers,
     success: success,
-    error: error,
-    data: data
+    error:   error,
+    data:    data
   } );
 
   event.preventDefault();
-
-};
+} );
 
 },{"peako/_":16,"peako/ajax":21}]},{},[83]);

@@ -11,7 +11,7 @@ var route = new Route( '/login' );
 
 route.get( function ( req, res ) {
 
-  new Promise( function ( resolve, reject ) {
+  new Promise( function ( resolve ) {
     if ( req.cookie.login && req.cookie.id ) {
       resolve( read( './data/users.json' ) );
     } else {
@@ -37,7 +37,9 @@ route.get( function ( req, res ) {
         'Content-Type': 'text/html'
       } );
 
-      res.end( layout.render( 'login', null, null, [
+      res.end( layout.render( 'login', null, [
+        layout.link( './styles/material-design-components/build/index.min.css' )
+      ], [
         layout.script( './build/login.js' )
       ] ) );
     } )

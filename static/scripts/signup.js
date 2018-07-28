@@ -3,8 +3,6 @@
 var ajax = require( 'peako/ajax' ),
     _    = require( 'peako/_' );
 
-console.log( 'It works!' );
-
 _( '#signup' ).submit( function ( event ) {
   var data = {
     confirmedPassword: _( '#confirmed-password' ).value(),
