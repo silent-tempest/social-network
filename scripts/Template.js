@@ -1,13 +1,20 @@
 'use strict';
 
-var template   = require( 'peako/template' ),
-    path       = require( 'path' ),
-    fs         = require( 'fs' );
+var template = require( 'peako/template' ),
+    path     = require( 'path' ),
+    fs       = require( 'fs' );
+
+/**
+ * @param {string} folder The views folder.
+ * @param {string} layout The layout file.
+ */
+
+// var layout = new Template( 'views', 'layout' );
 
 function Template ( folder, layout ) {
   this.folder = folder;
   this.layout = layout;
-  this._cache = Object.create( null );
+  this._cache = {};
 }
 
 Template.prototype = {
@@ -64,9 +71,13 @@ Template.prototype = {
 
     data.content = this.include( url, data );
 
-    data.head = head;
+    if ( head ) {
+      data.head = head;
+    }
 
-    data.body = body;
+    if ( body ) {
+      data.body = body;
+    }
 
     return this.include( this.layout, data );
 
