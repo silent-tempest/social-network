@@ -1702,44 +1702,38 @@ module.exports = require('./create/create-first')('toUpperCase');
 var ajax = require( 'peako/ajax' ),
     _    = require( 'peako/_' );
 
-console.log( 'It works!' );
+login.onsubmit = function onsubmit ( event ) {
 
-_( '#signup' ).submit( function ( event ) {
   var data = {
-    confirmedPassword: _( '#confirmed-password' ).value(),
-    password:          _( '#password' ).value(),
-    username:          _( '#username' ).value(),
-    gender:            _( '#gender' ).value()
+    username: username.value,
+    password: password.value
   };
 
   var headers = {
     'Content-Type': 'application/json'
   };
 
-  // jshint validthis: true
-
   function success ( d ) {
-    _( '#message' ).html( '<a href="' + d.url + '">' + d.username + '</a> account created!' );
+    message.innerHTML = 'success';
   }
 
-  function error ( d ) {
-    if ( d.selector ) {
-      _( d.selector ).css( 'color', 'red' );
+  function error ( data ) {
+    if ( data.selector ) {
+      _( data.selector ).css( 'color', 'red' );
     }
 
-    _( '#message' ).html( d.message || 'Error ' + this.status + ': "' + this.statusText + '"' );
+    message.innerHTML = data.message || 'Error ' + this.status + ': "' + this.statusText + '"';
   }
 
-  // jshint validthis: false
-
-  ajax( '/signup', {
+  ajax( '/login', {
     headers: headers,
     success: success,
-    error:   error,
-    data:    data
+    error: error,
+    data: data
   } );
 
   event.preventDefault();
-} );
+
+};
 
 },{"peako/_":16,"peako/ajax":21}]},{},[83]);
