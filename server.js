@@ -11,7 +11,7 @@ var https       = require( 'https' ),
 var options;
 
 Promise.all( [
-  read( './server-certificate.cert' ),
+  read( './server-certificate.crt' ),
   read( './server-key.key' ),
   read( './data/users.json' )
 ] )

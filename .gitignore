@@ -1,6 +1,6 @@
 data/*
 node_modules
 package-lock.json
-*.log
 server-certificate.crt
 server-key.key
+*.log
