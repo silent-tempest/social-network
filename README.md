@@ -6,10 +6,6 @@ A social network without any frameworks.
 
 `$ npm i`
 
-### Build Static Scripts
-
-`$ make FILE`
-
 ### Run
 
-`node server`
+`npm start`
