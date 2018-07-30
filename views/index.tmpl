@@ -1,19 +1,19 @@
 <div class="container">
   <div class="row">
-    <div class="col-7">
-      <h1 class="text--dark">SOCIAL NETWORK</h1>
+    <div class="col-9">
+      <h1 class="text--dark" style="text-align: center;">SOCIAL NETWORK</h1>
     </div>
     <div class="col-3">
       <form id="login" action="/login" method="POST">
         <h3 class="text--dark">LOG IN</h3>
         <%= this.include( 'textfield', { id: 'login-username', label: 'username', minlength: 2, name: 'username', type: 'text' } ) %>
         <%= this.include( 'textfield', { id: 'login-password', label: 'password', minlength: 6, name: 'password', type: 'password' } ) %>
-        <button class="mdc-button mdc-button--outlined submit">login</button>
+        <button class="mdc-button mdc-button--outlined" name="submit" disabled="">log in</button>
       </form>
       <form id="signup" action="/signup" method="POST">
         <h3 class="text--dark">SIGN UP</h3>
         <%= this.include( 'textfield', { id: 'signup-username', label: 'username', minlength: 2, name: 'username', type: 'text' } ) %>
-        <button class="mdc-button mdc-button--outlined submit">next</button>
+        <button class="mdc-button mdc-button--outlined" name="submit" disabled="">next</button>
       </form>
     </div>
   </div>

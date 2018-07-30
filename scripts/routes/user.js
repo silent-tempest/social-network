@@ -5,7 +5,7 @@ var Route  = require( '../Route' ),
     read   = require( '../read' );
 
 module.exports = new Route( '/user/:id' ).get( function ( req, res ) {
-  read( './data/users.json' )
+  return read( './data/users.json' )
     .then( function ( users ) {
       return JSON.parse( users );
     } )
@@ -16,14 +16,22 @@ module.exports = new Route( '/user/:id' ).get( function ( req, res ) {
       } );
 
       if ( ! user ) {
-        return res.redirect( '/wrong/?status=404&message=User not found' );
+        return res.redirect( '/wrong/?status=404&message=user not found' );
       }
 
       res.writeHead( 200, {
         'Content-Type': 'text/html; charset=UTF-8'
       } );
 
-      res.end( layout.render( 'user', user ) );
+      var head = [
+        layout.link( './dist/styles/user.bundle.min.css/' )
+      ];
+
+      var body = [
+        layout.script( './dist/scripts/user.bundle.min.js/' )
+      ];
+
+      res.end( layout.render( 'user', { session: req.session, user }, head, body ) );
 
     } );
 } );

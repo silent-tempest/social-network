@@ -70,8 +70,8 @@ module.exports = new Route( '/signup' ).post( function ( req, res ) {
     users.push( {
       username,
       password,
+      sessions: [],
       gender,
-      logins: [],
       salt,
       id
     } );

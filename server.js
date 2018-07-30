@@ -1,12 +1,13 @@
 'use strict';
 
-var https       = require( 'https' ),
-    http        = require( 'http' ),
-    parseCookie = require( './scripts/parse-cookie' ),
-    parseQuery  = require( './scripts/parse-query' ),
-    router      = require( './scripts/router' ),
-    write       = require( './scripts/write' ),
-    read        = require( './scripts/read' );
+var https         = require( 'https' ),
+    http          = require( 'http' ),
+    createSession = require( './scripts/create-session' ),
+    parseCookie   = require( './scripts/parse-cookie' ),
+    parseQuery    = require( './scripts/parse-query' ),
+    router        = require( './scripts/router' ),
+    write         = require( './scripts/write' ),
+    read          = require( './scripts/read' );
 
 var options;
 
@@ -51,20 +52,25 @@ function listener ( req, res ) {
     return res.redirect( '/wrong/?status=404&message=resource not found' );
   }
 
-  route.handle( req, res ).catch( function ( statusCode ) {
-    if ( typeof statusCode !== 'number' ) {
-      console.log( statusCode );
-      statusCode = 500;
-    }
+  createSession( req )
+    .then( function () {
+      return route.handle( req, res );
+    } )
+    .catch( function ( statusCode ) {
+      if ( typeof statusCode !== 'number' ) {
+        console.log( statusCode );
+        statusCode = 500;
+      }
 
-    res.statusCode = statusCode;
+      res.statusCode = statusCode;
+      res.setHeader( 'Content-Type', 'text/plain' );
 
-    if ( statusCode === 413 ) {
-      req.connection.destroy();
-    } else {
-      res.end();
-    }
-  } );
+      if ( statusCode === 413 ) {
+        req.connection.destroy();
+      } else {
+        res.end();
+      }
+    } );
 }
 
 http.ServerResponse.prototype.redirect = function redirect ( Location ) {

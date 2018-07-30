@@ -1,7 +1,6 @@
 'use strict';
 
 var method = require( 'peako/method' ),
-    find   = require( 'peako/find' ),
     mime   = require( 'mime' ),
     path   = require( 'path' ),
     Route  = require( './Route' ),
@@ -61,7 +60,7 @@ Router.prototype = {
         };
       }
 
-      read( filepath )
+      return read( filepath )
         .then( function ( file ) {
           res.writeHead( 200, headers );
           res.end( file );
@@ -77,7 +76,7 @@ Router.prototype = {
 
   handle: function handle ( route ) {
 
-    if ( find( this.routes, method( 'matches', route.url || route.pattern ) ) ) {
+    if ( this.routes.find( method( 'matches', route.url || route.pattern ) ) ) {
       throw Error();
     }
 
@@ -94,7 +93,7 @@ Router.prototype = {
 [ 'get', 'post' ].forEach( function ( methodName ) {
   Router.prototype[ methodName ] = function ( url, handler ) {
 
-    var route = find( this.routes, method( 'matches', url ) );
+    var route = this.routes.find( method( 'matches', url ) );
 
     if ( ! route ) {
       this.routes.push( route = new Route( url )[ methodName ]( handler ) );

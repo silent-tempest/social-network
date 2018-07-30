@@ -1,0 +1,12 @@
+@import '@material/button/mdc-button';
+@import 'palette';
+
+.mdc-button--outlined {
+  @include mdc-button-outline-color( $accent );
+  @include mdc-button-ink-color( $accent );
+}
+
+.mdc-button {
+  @include mdc-button-corner-radius( 4px );
+  @include mdc-states( $accent );
+}

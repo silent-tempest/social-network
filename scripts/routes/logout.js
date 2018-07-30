@@ -1,18 +1,18 @@
 'use strict';
 
-var find    = require( 'peako/find' ),
-    Route   = require( '../Route' ),
-    read    = require( '../read' ),
-    write   = require( '../write' );
+var find  = require( 'peako/find' ),
+    Route = require( '../Route' ),
+    read  = require( '../read' ),
+    write = require( '../write' );
 
 var route = new Route( '/logout' );
 
 route.get( function ( req, res ) {
 
   new Promise( function ( resolve, reject ) {
-    if ( req.cookie.login && req.cookie.id ) {
+    if ( req.cookie.sessionid && req.cookie.userid ) {
       resolve( read( './data/users.json' ) );
-    } else if ( req.cookie.login || req.cookie.id ) {
+    } else if ( req.cookie.sessionid || req.cookie.userid ) {
       resolve();
     } else {
       reject();
@@ -27,11 +27,11 @@ route.get( function ( req, res ) {
       var user, index;
 
       if ( users &&
-        ( user = find( users, [ 'id', req.cookie.id ] ) ) &&
-        ~ ( index = user.logins.indexOf( req.cookie.login ) ) )
+        ( user = find( users, [ 'id', req.cookie.userid ] ) ) &&
+        ~ ( index = user.sessions.indexOf( req.cookie.sessionid ) ) )
       {
 
-        user.logins.splice( index, 1 );
+        user.sessions.splice( index, 1 );
 
         return write( './data/users.json', JSON.stringify( users, null, 2 ) );
 
@@ -40,12 +40,12 @@ route.get( function ( req, res ) {
     .then( function () {
       var cookie = [];
 
-      if ( req.cookie.login ) {
-        cookie.push( 'login=' + '' + '; Secure; HttpOnly; Path=/' );
+      if ( req.cookie.sessionid ) {
+        cookie.push( 'sessionid=' + '' + '; Secure; HttpOnly; Path=/' );
       }
 
-      if ( req.cookie.id ) {
-        cookie.push( 'id=' + '' + '; Secure; HttpOnly; Path=/' );
+      if ( req.cookie.userid ) {
+        cookie.push( 'userid=' + '' + '; Secure; HttpOnly; Path=/' );
       }
 
       res.setHeader( 'Set-Cookie', cookie );

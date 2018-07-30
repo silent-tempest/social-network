@@ -6,7 +6,7 @@ var constants = require( '../constants' ),
     user      = require( '../find-user' );
 
 module.exports = new Route( '/' ).get( function ( req, res ) {
-  return user( req.cookie )
+  return user( req.cookie, true )
     .then( function ( user ) {
       res.redirect( '/user/' + ( user.alias || user.id ) + '/' );
     } )

@@ -8,4 +8,4 @@ A social network without any frameworks.
 
 ### Run
 
-`npm start`
+`$ npm start`

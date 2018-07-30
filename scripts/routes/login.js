@@ -11,14 +11,14 @@ var AuthorizationError = require( '../AuthorizationError' ),
     read               = require( '../read' );
 
 module.exports = new Route( '/login' ).post( function ( req, res ) {
-  var _users, _user, _login;
+  var _users, _user, _sessionid;
 
   return read( './data/users.json' )
     .then( function ( users ) {
       return ( _users = JSON.parse( users ) );
     } )
     .then( function ( users ) {
-      return user( req.cookie, users );
+      return user( req.cookie, users, true );
     } )
 
     // user found
@@ -57,11 +57,15 @@ module.exports = new Route( '/login' ).post( function ( req, res ) {
         throw new AuthorizationError( 'password', 'bad password' );
       }
 
-      _login = crypto
-        .randomBytes( 16 )
+      if ( typeof req.query.validate !== 'undefined' ) {
+        throw constants.GOOD_INPUT;
+      }
+
+      _sessionid = crypto
+        .randomBytes( 4 )
         .toString( 'hex' );
 
-      _user.logins.push( _login );
+      _user.sessions.push( _sessionid );
 
       return write( './data/users.json', JSON.stringify( _users, null, 2 ) );
     } )
@@ -73,14 +77,37 @@ module.exports = new Route( '/login' ).post( function ( req, res ) {
       var Expires = new Date( new Date().getTime() + 1000 * 60 * 60 * 24 * 365 ).toGMTString();
 
       res.setHeader( 'Set-Cookie', [
-        'login=' + _login + '; Expires=' + Expires + '; Secure; httpOnly; Path=/',
-        'id=' + _user.id + '; Expires=' + Expires + '; Secure; httpOnly; Path=/'
+        'sessionid=' + _sessionid + '; Expires=' + Expires + '; Secure; httpOnly; Path=/',
+        'userid=' + _user.id + '; Expires=' + Expires + '; Secure; httpOnly; Path=/'
       ] );
 
       res.redirect( '/user/' + ( _user.alias || _user.id ) + '/' );
 
     } )
     .catch( function ( error ) {
+
+      if ( typeof req.query.validate !== 'undefined' ) {
+        if ( error === constants.GOOD_INPUT ) {
+          res.writeHead( 200, {
+            'Content-Type': 'text/plain'
+          } );
+
+          res.end( '' );
+        } else if ( error instanceof AuthorizationError ) {
+          res.writeHead( 400, {
+            'Content-Type': 'application/json'
+          } );
+
+          res.end( JSON.stringify( {
+            fieldname: error.fieldname,
+            message:   error.message
+          } ) );
+        } else {
+          throw 500;
+        }
+
+        return;
+      }
 
       // user already authorized
 
