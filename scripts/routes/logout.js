@@ -49,10 +49,10 @@ route.get( function ( req, res ) {
       }
 
       res.setHeader( 'Set-Cookie', cookie );
-      res.redirect( '/login/' );
+      res.redirect( '/' );
     } )
     .catch( function () {
-      res.redirect( '/wrong/?status=500' );
+      res.redirect( '/wrong/' );
     } );
 
 } );

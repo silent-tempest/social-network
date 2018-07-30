@@ -3,7 +3,6 @@
     "Promise",
     "JSON"
   ],
-
   "esversion": 6,
   "strict": "global",
   "shadow": true,

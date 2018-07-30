@@ -1,132 +1,101 @@
 'use strict';
 
-var crypto  = require( 'crypto' ),
-    find    = require( 'peako/find' ),
-    Route   = require( '../Route' ),
-    layout  = require( '../layout' ),
-    read    = require( '../read' ),
-    write   = require( '../write' );
+var crypto = require( 'crypto' ),
+    find   = require( 'peako/find' );
 
-var route = new Route( '/login' );
+var AuthorizationError = require( '../AuthorizationError' ),
+    constants          = require( '../constants' ),
+    Route              = require( '../Route' ),
+    user               = require( '../find-user' ),
+    write              = require( '../write' ),
+    read               = require( '../read' );
 
-route.get( function ( req, res ) {
+module.exports = new Route( '/login' ).post( function ( req, res ) {
+  var _users, _user, _login;
 
-  new Promise( function ( resolve ) {
-    if ( req.cookie.login && req.cookie.id ) {
-      resolve( read( './data/users.json' ) );
-    } else {
-      resolve();
-    }
-  } )
+  return read( './data/users.json' )
     .then( function ( users ) {
-      if ( users ) {
-        return JSON.parse( users );
-      }
+      return ( _users = JSON.parse( users ) );
     } )
     .then( function ( users ) {
-      if ( users ) {
-        var user = find( users, [ 'id', req.cookie.id ] );
-
-        if ( user && ~ user.logins.indexOf( req.cookie.login ) ) {
-          throw 0;
-        }
-      }
+      return user( req.cookie, users );
     } )
-    .then( function () {
-      res.statusCode = 200;
-      res.setHeader( 'Content-Type', 'text/html; charset=UTF-8' );
 
-      res.end( layout.render( 'login', null, null, [
-        layout.script( './build/login.js' )
-      ] ) );
+    // user found
+
+    .then( function ( user ) {
+      _user = user;
+      throw constants.ALREADY_AUTHORIZED;
     } )
+
+    // user is not authorized
+
     .catch( function ( error ) {
-      if ( error === 0 ) {
-        res.redirect( '/user/' + req.cookie.id + '/' );
-      } else {
-        res.redirect( '/wrong/?status=500' );
+      if ( error !== constants.NO_USER ) {
+        throw error;
       }
-    } );
 
-} );
+      var username = req.body.username,
+          password = req.body.password;
 
-route.post( function ( req, res ) {
-  var username = req.body.username,
-      password = req.body.password;
+      if ( typeof username === 'undefined' || typeof password === 'undefined' ) {
+        return res.redirect( '/wrong/status=400&message=great, super hacka!' );
+      }
 
-  var login, id;
+      _user = find( _users, [ 'username', username.trim() ] );
 
-  // hackers trying to make something bad LOL
-
-  if ( typeof username === 'undefined' || typeof password === 'undefined' ) {
-    return res.end();
-  }
-
-  username = username.trim();
-
-  read( './data/users.json' )
-    .then( function ( users ) {
-      return JSON.parse( users );
-    } )
-    .then( function ( users ) {
-
-      var user = users.find( function ( user ) {
-        return user.username === username;
-      } );
-
-      if ( ! user ) {
-        return badInput( '#username', 'Bad username' );
+      if ( ! _user ) {
+        throw new AuthorizationError( 'username', 'bad username' );
       }
 
       password = crypto
-        .createHmac( 'sha512', user.salt )
+        .createHmac( 'sha512', _user.salt )
         .update( password )
         .digest( 'hex' );
 
-      if ( password !== user.password ) {
-        return badInput( '#password', 'Bad password' );
+      if ( password !== _user.password ) {
+        throw new AuthorizationError( 'password', 'bad password' );
       }
 
-      login = crypto
+      _login = crypto
         .randomBytes( 16 )
         .toString( 'hex' );
 
-      id    = user.id;
+      _user.logins.push( _login );
 
-      user.logins.push( login );
-
-      return write( './data/users.json', JSON.stringify( users, null, 2 ) );
-
+      return write( './data/users.json', JSON.stringify( _users, null, 2 ) );
     } )
+
+    // user authorized successfully
+
     .then( function () {
 
       var Expires = new Date( new Date().getTime() + 1000 * 60 * 60 * 24 * 365 ).toGMTString();
 
-      res.writeHead( 200, {
-        'Set-Cookie': [
-          'login=' + login + '; Expires=' + Expires + '; Secure; httpOnly; Path=/',
-          'id=' + id + '; Expires=' + Expires + '; Secure; httpOnly; Path=/'
-        ]
-      } );
+      res.setHeader( 'Set-Cookie', [
+        'login=' + _login + '; Expires=' + Expires + '; Secure; httpOnly; Path=/',
+        'id=' + _user.id + '; Expires=' + Expires + '; Secure; httpOnly; Path=/'
+      ] );
 
-      res.end();
+      res.redirect( '/user/' + ( _user.alias || _user.id ) + '/' );
 
     } )
-    .catch( function ( e ) {
-      console.log( e );
-      res.statusCode = 500;
-      res.end();
+    .catch( function ( error ) {
+
+      // user already authorized
+
+      if ( error === constants.ALREADY_AUTHORIZED ) {
+        res.redirect( '/user/' + ( _user.alias || _user.id ) + '/' );
+
+      // bad input
+
+      } else if ( error instanceof AuthorizationError ) {
+        res.redirect( '/?fieldname=' + error.fieldname + '&message=' + error.message );
+
+      // internal error
+
+      } else {
+        res.redirect( '/wrong/?status=500&message=something went wrong' );
+      }
     } );
-
-  function badInput ( selector, message ) {
-
-    res.writeHead( 400, {
-      'Content-Type': 'application/json'
-    } );
-
-    res.end( JSON.stringify( { message, selector } ) );
-
-  }
 } );
-
-module.exports = route;

@@ -1,36 +1,20 @@
-<h1>Sign Up</h1>
-
-<form id="signup">
-
-  <div class="input-group light blue">
-    <input id="username" type="text" required="" />
-    <label for="username">Username</label>
-    <span class="input-helper">Letters (A-Z), digits (0-9), underscores, dashes, or spaces</span>
-    <hr />
-    <hr class="input-highlight" />
+<div class="container">
+  <div class="row">
+    <div class="col-7">
+      <h1 class="text--dark">SOCIAL NETWORK</h1>
+    </div>
+    <div class="col-3">
+      <form id="login" action="/login" method="POST">
+        <h3 class="text--dark">LOG IN</h3>
+        <%= this.include( 'textfield', { id: 'login-username', label: 'username', minlength: 2, name: 'username', type: 'text' } ) %>
+        <%= this.include( 'textfield', { id: 'login-password', label: 'password', minlength: 6, name: 'password', type: 'password' } ) %>
+        <button class="mdc-button mdc-button--outlined submit">login</button>
+      </form>
+      <form id="signup" action="/signup" method="POST">
+        <h3 class="text--dark">SIGN UP</h3>
+        <%= this.include( 'textfield', { id: 'signup-username', label: 'username', minlength: 2, name: 'username', type: 'text' } ) %>
+        <button class="mdc-button mdc-button--outlined submit">next</button>
+      </form>
+    </div>
   </div>
-
-  <div class="input-group light blue">
-    <input id="password" type="password" required="" />
-    <label for="password">Password</label>
-    <hr />
-    <hr class="input-highlight" />
-  </div>
-
-  <div class="input-group light blue">
-    <input id="confirmed-password" type="password" required="" />
-    <label for="confirmed-password">Confirmed password</label>
-    <hr />
-    <hr class="input-highlight" />
-  </div>
-
-  <select id="gender" required="">
-    <option value="female">A girl</option>
-    <option value="male">A boy</option>
-  </select>
-
-  <button class="raised-button" id="submit">OK</button>
-
-</form>
-
-<p id="message"></p>
+</div>

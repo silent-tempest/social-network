@@ -103,7 +103,7 @@ Route.prototype = {
     var self = this;
 
     return this._process( req ).then( function () {
-      self.handlers[ req.method ]( req, res );
+      return self.handlers[ req.method ]( req, res );
     } );
 
   },

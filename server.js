@@ -48,7 +48,7 @@ function listener ( req, res ) {
   }
 
   if ( ! ( route = router.route( req ) ) ) {
-    return res.redirect( '/wrong/?status=404&message=Resource not found' );
+    return res.redirect( '/wrong/?status=404&message=resource not found' );
   }
 
   route.handle( req, res ).catch( function ( statusCode ) {

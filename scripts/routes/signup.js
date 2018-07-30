@@ -20,8 +20,8 @@ module.exports = new Route( '/signup' ).post( function ( req, res ) {
 
   // validate the input
 
-  if ( ! username.length ) {
-    badInput( '#username', 'No username' );
+  if ( username.length < 2 ) {
+    badInput( '#username', 'The username must be at least 2 characters' );
   } else if ( username.length > 16 ) {
     badInput( '#username', 'The length of the username cannot exceed 16 characters' );
   } else if ( ! /^[\w\- ]+$/.test( username ) ) {

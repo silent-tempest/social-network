@@ -1,0 +1,42 @@
+/**
+ * A stylesheet for the index page '/'.
+ */
+
+// @import 'risetto/index.sass';
+@import "@material/textfield/helper-text/mdc-text-field-helper-text";
+@import '@material/textfield/mdc-text-field';
+@import '@material/button/mdc-button';
+@import 'layout-grid/index.sass';
+@import 'palette';
+
+body {
+  background: #fcf4f9;
+  font: 400 16px Ubuntu, Helvetica, Roboto, Ariel, sans-serif;
+}
+
+form {
+  background: #ffffff;
+  width: 100%;
+  padding: 24px 48px;
+  box-shadow: inset 0 0 2px 2px rgba( 0, 0, 0, 0.12 );
+  margin-bottom: 36px;
+}
+
+.mdc-button--outlined {
+  @include mdc-button-outline-color( $accent );
+  @include mdc-button-ink-color( $accent );
+}
+
+.mdc-button {
+  @include mdc-button-corner-radius( 4px );
+  @include mdc-states( $accent );
+}
+
+.mdc-text-field--outlined {
+  @include mdc-text-field-focused-outline-color( $accent );
+  @include mdc-text-field-hover-outline-color( $accent );
+  @include mdc-text-field-outline-color( $accent );
+  @include mdc-text-field-label-color( $accent );
+  @include mdc-text-field-caret-color( rgba( 0, 0, 0, 0.87 ) );
+  @include mdc-text-field-ink-color( rgba( 0, 0, 0, 0.87 ) );
+}

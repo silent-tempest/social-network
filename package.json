@@ -4,8 +4,7 @@
   "description": "A social network.",
   "main": "server.js",
   "scripts": {
-    "lint-server": "jshint . --verbose",
-    "lint-static": "cd static && jshint . --verbose"
+    "start": "make lint && node server"
   },
   "repository": {
     "type": "git",
@@ -19,11 +18,20 @@
   "homepage": "https://github.com/silent-tempest/social-network#readme",
   "dependencies": {
     "mime": "^2.3.1",
-    "peako": "^0.0.1",
+    "peako": "^0.0.4",
     "qs": "^6.5.2"
   },
   "devDependencies": {
+    "@material/button": "^0.37.1",
+    "@material/textfield": "^0.37.1",
+    "@material/typography": "^0.37.1",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babelify": "^8.0.0",
     "browserify": "^16.2.2",
-    "uglify-js": "^3.4.5"
+    "jshint": "^2.9.5",
+    "layout-grid": "^0.0.1",
+    "node-sass": "^4.9.2",
+    "uglify-es": "^3.3.9"
   }
 }
