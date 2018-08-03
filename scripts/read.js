@@ -6,12 +6,12 @@ var fs = require( 'fs' );
 //   .then( ( users ) => JSON.parse( users ) );
 
 module.exports = function read ( url ) {
-  return new Promise( function ( res, rej ) {
-    fs.readFile( url, 'utf8', function ( e, d ) {
+  return new Promise( function ( rs, rj ) {
+    fs.readFile( url, function ( e, d ) {
       if ( e ) {
-        rej( e );
+        rj( e );
       } else {
-        res( d );
+        rs( d );
       }
     } );
   } );

@@ -1,7 +1,8 @@
 {
   "predef": [
     "console",
-    "self"
+    "self",
+    "top"
   ],
   "browserify": true,
   "esversion": 6,

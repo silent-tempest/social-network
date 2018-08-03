@@ -1,35 +1,21 @@
 <!DOCTYPE html>
-
-<html lang="en-US">
-
+<html lang="en">
 <head>
-
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="Cache-Control" content="no-cache" />
-
-  <%# include stylesheets. %>
-
+  <%# include stylesheets %>
   <% if ( data.head ) {
     print.apply( null, data.head );
   } %>
-
-  <title><%- data.title || data.username || 'social-network' %></title>
-
+  <title><%- data.title || data.username || 'social network' %></title>
 </head>
-
 <body>
-
-  <%# rendering main content (a user profile, login page, etc). %>
-
+  <%# include the main content (the index page, user profile...) %>
   <%= data.content %>
-
-  <%# include scripts. %>
-
+  <%# include scripts %>
   <% if ( data.body ) {
     print.apply( null, data.body );
   } %>
-
 </body>
-
 </html>

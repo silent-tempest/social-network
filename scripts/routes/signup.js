@@ -1,8 +1,8 @@
 'use strict';
 
-var crypto = require( 'crypto' ),
-    fs     = require( 'fs' ),
-    Route  = require( '../Route' );
+var crypto = require( 'crypto' );
+var fs     = require( 'fs' );
+var Route  = require( '../lib/Route' );
 
 module.exports = new Route( '/signup' ).post( function ( req, res ) {
   var username = req.body.username,

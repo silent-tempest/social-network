@@ -2,7 +2,7 @@
 
 var constants = require( '../constants' ),
     layout    = require( '../layout' ),
-    Route     = require( '../Route' ),
+    Route     = require( '../lib/Route' ),
     user      = require( '../find-user' );
 
 module.exports = new Route( '/' ).get( function ( req, res ) {
@@ -20,16 +20,17 @@ module.exports = new Route( '/' ).get( function ( req, res ) {
       } );
 
       var head = [
-        layout.link( './dist/styles/index.bundle.min.css/' )
+        layout.link( './dist/styles/index.bundle.min.css' )
       ];
 
       var body = [
-        layout.script( './dist/scripts/index.bundle.min.js/' )
+        layout.script( './dist/scripts/index.bundle.min.js' )
       ];
 
       res.end( layout.render( 'index', null, head, body ) );
     } )
-    .catch( function () {
+    .catch( function ( error ) {
+      console.log( error );
       res.redirect( '/wrong/?status=500&message=something went wrong' );
     } );
 } );

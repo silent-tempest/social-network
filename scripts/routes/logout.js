@@ -1,9 +1,9 @@
 'use strict';
 
-var find  = require( 'peako/find' ),
-    Route = require( '../Route' ),
-    read  = require( '../read' ),
-    write = require( '../write' );
+var find  = require( 'peako/find' );
+var Route = require( '../lib/Route' );
+var write = require( '../write' );
+var read  = require( '../read' );
 
 var route = new Route( '/logout' );
 

@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = new ( require( './Template' ) )( 'views', 'layout' );
+module.exports = new ( require( './lib/Template' ) )( 'views', 'layout' );

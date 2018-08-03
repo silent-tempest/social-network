@@ -1,5 +1,5 @@
 @import '@material/button/mdc-button';
-@import 'palette';
+@import './lib/palette';
 
 .mdc-button--outlined {
   @include mdc-button-outline-color( $accent );

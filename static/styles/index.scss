@@ -6,7 +6,7 @@
 @import '@material/textfield/mdc-text-field';
 @import '@material/button/mdc-button';
 @import 'layout-grid/index.sass';
-@import 'palette';
+@import './lib/palette';
 
 body {
   background: #fcf4f9;

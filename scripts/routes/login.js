@@ -1,14 +1,14 @@
 'use strict';
 
-var crypto = require( 'crypto' ),
-    find   = require( 'peako/find' );
+var crypto = require( 'crypto' );
+var find   = require( 'peako/find' );
 
-var AuthorizationError = require( '../AuthorizationError' ),
-    constants          = require( '../constants' ),
-    Route              = require( '../Route' ),
-    user               = require( '../find-user' ),
-    write              = require( '../write' ),
-    read               = require( '../read' );
+var AuthorizationError = require( '../AuthorizationError' );
+var constants          = require( '../constants' );
+var Route              = require( '../lib/Route' );
+var user               = require( '../find-user' );
+var write              = require( '../write' );
+var read               = require( '../read' );
 
 module.exports = new Route( '/login' ).post( function ( req, res ) {
   var _users, _user, _sessionid;
@@ -62,8 +62,14 @@ module.exports = new Route( '/login' ).post( function ( req, res ) {
       }
 
       _sessionid = crypto
-        .randomBytes( 4 )
-        .toString( 'hex' );
+        .createHash( 'sha512' )
+        .update( _user.username )
+        .digest( 'hex' );
+
+      _sessionid = crypto
+        .createHmac( 'sha512', password )
+        .update( _sessionid )
+        .digest( 'hex' );
 
       _user.sessions.push( _sessionid );
 

@@ -1,8 +1,8 @@
 'use strict';
 
-var Route  = require( '../Route' ),
-    layout = require( '../layout' ),
-    read   = require( '../read' );
+var Route  = require( '../lib/Route' );
+var layout = require( '../layout' );
+var read   = require( '../read' );
 
 module.exports = new Route( '/user/:id' ).get( function ( req, res ) {
   return read( './data/users.json' )
@@ -24,11 +24,11 @@ module.exports = new Route( '/user/:id' ).get( function ( req, res ) {
       } );
 
       var head = [
-        layout.link( './dist/styles/user.bundle.min.css/' )
+        layout.link( '../../dist/styles/user.bundle.min.css' )
       ];
 
       var body = [
-        layout.script( './dist/scripts/user.bundle.min.js/' )
+        layout.script( '../../dist/scripts/user.bundle.min.js' )
       ];
 
       res.end( layout.render( 'user', { session: req.session, user }, head, body ) );

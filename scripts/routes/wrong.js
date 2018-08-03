@@ -1,7 +1,7 @@
 'use strict';
 
-var layout = require( '../layout' ),
-    Route  = require( '../Route' );
+var layout = require( '../layout' );
+var Route  = require( '../lib/Route' );
 
 module.exports = new Route( '/wrong' ).get( function ( req, res ) {
 

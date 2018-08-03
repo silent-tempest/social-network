@@ -6,12 +6,12 @@ var fs = require( 'fs' );
 //   .then( () => res.end() );
 
 module.exports = function write ( url, d ) {
-  return new Promise( function ( res, rej ) {
+  return new Promise( function ( rs, rj ) {
     fs.writeFile( url, d, function ( e ) {
       if ( e ) {
-        rej( e );
+        rj( e );
       } else {
-        res( d );
+        rs( d );
       }
     } );
   } );

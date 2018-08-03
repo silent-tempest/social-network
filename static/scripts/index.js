@@ -1,5 +1,9 @@
 'use strict';
 
+if ( top !== self ) {
+  top.location = self.location;
+}
+
 var textfield = require( '@material/textfield' );
 var ripple    = require( '@material/ripple' );
 var ajax      = require( 'peako/ajax' );
@@ -14,6 +18,10 @@ _( document ).on( 'ontouchstart' in self ? 'ontouchstart' : 'click', '.mdc-butto
     this._ripple = new ripple.MDCRipple( this );
   }
 } );
+
+// ОСТОРОЖНО WARNING !!!!! СНИЗУ ГАВНОКОД НЕ СМОТРИТЕ
+// Я УСТАЛ ПИСАТЬ
+// ПОТОМ НАПИШУ НОРМАЛЬНО
 
 var loginDisabled = true,
     idValidateLogin;

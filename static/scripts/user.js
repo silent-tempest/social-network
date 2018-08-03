@@ -1,5 +1,9 @@
 'use strict';
 
+if ( top !== self ) {
+  top.location = self.location;
+}
+
 var ripple = require( '@material/ripple' );
 var event  = require( 'peako/event' );
 
