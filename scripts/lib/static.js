@@ -6,7 +6,10 @@ var mime  = require( 'mime' );
 var path  = require( 'path' );
 
 module.exports = function ( folder ) {
-  return new Route( /[^\/]$/ ).all( function ( request, response, next ) {
+
+  // listen only paths with extensions
+
+  return new Route( /\.[a-z]+$/i ).all( function ( request, response, next ) {
     if ( request.method !== 'GET' && request.method !== 'HEAD' ) {
       return next();
     }

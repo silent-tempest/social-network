@@ -1,11 +1,12 @@
 'use strict';
 
-var Router  = require( './lib/Router' );
+var Router = require( './lib/Router' );
 
 var router = new Router()
   .use( require( './middleware/initialize' ) )
   .use( require( './middleware/parse-query' ) )
-  .use( require( './lib/static' )( 'static' ) )
+  .use( require( './middleware/security' ) )
+  .use( require( './lib/static' )( 'static', rstatic ) )
   .use( require( './middleware/redirect' ) )
   .use( require( './middleware/parse-body' ) )
   .use( require( './middleware/parse-cookie' ) )
