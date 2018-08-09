@@ -1,0 +1,9 @@
+<div class="top-app-bar">
+  <% if ( data.page !== 'index' ) { %>
+    <% if ( data.loggedAs || data.username ) { %>
+      <p><a href="/logout/" class="flat-button">выйти</a></p>
+    <% } else { %>
+      <p><a href="/" class="flat-button">вход</a> или <a href="/" class="flat-button">регистрация</a></p>
+    <% } %>
+  <% } %>
+</div>

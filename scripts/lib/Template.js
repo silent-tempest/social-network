@@ -1,15 +1,19 @@
+/**
+ * This class just implements caching and include function.
+ */
+
 'use strict';
 
-var template = require( 'peako/template' ),
-    path     = require( 'path' ),
-    fs       = require( 'fs' );
+const template = require( 'peako/template' );
+const { resolve, extname } = require( 'path' );
+const { readFileSync } = require( 'fs' );
 
 /**
  * @param {string} folder The views folder.
  * @param {string} layout The layout file.
  */
 
-// var layout = new Template( 'views', 'layout' );
+// const layout = new Template( 'views', 'layout' )
 
 function Template ( folder, layout ) {
   this.folder = folder;
@@ -20,36 +24,28 @@ function Template ( folder, layout ) {
 Template.prototype = {
 
   // <% for ( let post of data.posts ) {
-  //   print( this.include( 'post', post ) );
+  //   print( this.include( 'post', post ) )
   // } %>
 
-  include: function include ( url, data ) {
-
-    if ( ! data ) {
-      data = {};
+  include ( path, data ) {
+    if ( ! extname( path = resolve( this.folder, path ) ) ) {
+      path += '.tmpl';
     }
 
-    url = path.join( this.folder, url ) + '.tmpl';
-
-    if ( ! this._cache[ url ] ) {
-
-      this._cache[ url ] = template( fs.readFileSync( url, 'utf8' ) );
-
+    if ( ! this._cache[ path ] ) {
+      this._cache[ path ] = template( readFileSync( path, 'utf8' ) );
     } else if ( ! Template.caching ) {
+      const source = readFileSync( path, 'utf8' );
 
-      var source = fs.readFileSync( url, 'utf8' );
-
-      if ( this._cache[ url ].source !== source ) {
-        this._cache[ url ] = template( source );
+      if ( this._cache[ path ].source !== source ) {
+        this._cache[ path ] = template( source );
       }
-
     }
 
-    return this._cache[ url ].render.call( this, data );
-
+    return this._cache[ path ].render.call( this, data || {} );
   },
 
-  // const data = {
+  // const user = {
   //   name: 'John'
   // }
 
@@ -61,38 +57,27 @@ Template.prototype = {
   //   layout.script( './scripts/user.js' )
   // ]
 
-  // const html = layout.render( 'user', data, head, body )
+  // const html = layout.render( 'user', { user, head, body } )
 
-  render: function render ( url, data, head, body ) {
-
+  render ( path, data ) {
     if ( ! data ) {
       data = {};
     }
 
-    data.content = this.include( url, data );
-
-    if ( head ) {
-      data.head = head;
-    }
-
-    if ( body ) {
-      data.body = body;
-    }
+    data.content = this.include( path, data );
 
     return this.include( this.layout, data );
-
   },
 
-  script: function script ( src ) {
+  script ( src ) {
     return '<script src="' + src + '"></script>';
   },
 
-  link: function link ( href, rel ) {
+  link ( href, rel ) {
     return '<link rel="' + ( rel || 'stylesheet' ) + '" href="' + href + '" />';
   },
 
   constructor: Template
-
 };
 
 Template.caching = false;

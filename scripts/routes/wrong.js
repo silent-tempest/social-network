@@ -1,14 +1,8 @@
 'use strict';
 
-var layout = require( '../layout' );
-var Route  = require( '../lib/Route' );
+var Route = require( '../lib/Route' );
 
-module.exports = new Route( '/wrong' ).get( function ( req, res ) {
-
-  res.writeHead( 400, {
-    'Content-Type': 'text/html'
-  } );
-
-  res.end( layout.render( 'wrong', req.query ) );
-
+module.exports = new Route( '/wrong' ).get( ( request, response ) => {
+  response.statusCode = 400; // bad request
+  response.render( 'wrong', request.query );
 } );

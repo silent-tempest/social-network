@@ -1,7 +1,0 @@
-<% var mine = data.session.user && data.session.user.id === data.user.id; %>
-
-<% if ( mine ) { %>
-  <a href="/logout/" class="mdc-button mdc-button--outlined">LOG OUT</a>
-<% } %>
-
-<p><%- data.user.username %></p>

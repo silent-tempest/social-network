@@ -1,9 +1,5 @@
-/**
- * A color palette.
- */
-
-$accent:  darken( #fcf4f9, 25% );
-
-.text--dark {
-  color: rgba( 0, 0, 0, 0.87 );
-}
+$accent:           #202020;
+$accent--dark:     darken( $accent, 15% );
+$accent--darkest:  darken( $accent, 25% );
+$accent--light:    lighten( $accent, 5% );
+$accent--lightest: lighten( $accent, 15% );

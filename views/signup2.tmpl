@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="offset-8 column-4">
+    <form class="card" id="signup" action="/signup?step=2" method="POST">
+      <h3>Регистрация</h3>
+      <%= this.include( './partials/input-password', { name: 'password', id: 'password', dark: true } ) %>
+      <%= this.include( './partials/input-password', { name: 'confirmedPassword', id: 'confirmed-password', label: 'Подтвердите пароль', dark: true } ) %>
+      <div style="text-align: right;">
+        <button class="flat-button" name="submit" type="submit">Зарегистрироваться</button>
+      </div>
+    </form>
+  </div>
+</div>

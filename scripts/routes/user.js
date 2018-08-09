@@ -1,37 +1,21 @@
 'use strict';
 
-var Route  = require( '../lib/Route' );
-var layout = require( '../layout' );
-var read   = require( '../read' );
+const { user } = require( '../database' );
+const engine = require( '../engine' );
+const Route = require( '../lib/Route' );
 
-module.exports = new Route( '/user/:id' ).get( function ( req, res ) {
-  return read( './data/users.json' )
-    .then( function ( users ) {
-      return JSON.parse( users );
-    } )
-    .then( function ( users ) {
+module.exports = new Route( '/user/:id' ).get( ( request, response, next ) => {
+  user( request.params.id, request.session.user ).then( ( data ) => {
+    if ( ! data.rows[ 0 ] ) {
+      return next();
+    }
 
-      var user = users.find( function ( { id, alias } ) {
-        return id === req.params.id || alias === req.params.id;
-      } );
-
-      if ( ! user ) {
-        return res.redirect( '/wrong/?status=404&message=user not found' );
-      }
-
-      res.writeHead( 200, {
-        'Content-Type': 'text/html; charset=UTF-8'
-      } );
-
-      var head = [
-        layout.link( '../../dist/styles/user.bundle.min.css' )
-      ];
-
-      var body = [
-        layout.script( '../../dist/scripts/user.bundle.min.js' )
-      ];
-
-      res.end( layout.render( 'user', { session: req.session, user }, head, body ) );
-
+    response.statusCode = 200; // ok
+    response.render( 'user2', {
+      user: data.rows[ 0 ],
+      head: [ engine.link( '../../dist/styles/user2.bundle.min.css' ) ],
+      body: [ engine.script( '../../dist/scripts/user2.bundle.min.js' ) ],
+      loggedAs: request.session.user
     } );
+  } );
 } );

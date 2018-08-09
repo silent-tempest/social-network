@@ -1,0 +1,9 @@
+@import './palette';
+
+.card {
+  background: $accent--light;
+  box-shadow: 0 0 4px rgba( 0, 0, 0, 0.12 );
+  padding: 24px;
+  width: 100%;
+  border-radius: 2px;
+}

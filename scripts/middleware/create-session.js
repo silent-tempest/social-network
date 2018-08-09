@@ -1,40 +1,60 @@
 'use strict';
 
-var taffy = require( 'taffy' );
-var read  = require( '../read' );
+const { query, user } = require( '../database' );
 
-module.exports = function createSession ( request, response, next ) {
+const tryUserSession = ( request ) => {
+  if ( ! request.cookie[ 'user-session' ] ) {
+    return Promise.resolve( true );
+  }
+
+  return query( 'SELECT id, expires FROM "user-sessions" WHERE session = $1;', [ request.cookie[ 'user-session' ] ] )
+    .then( ( data ) => {
+      const session = data.rows[ 0 ];
+
+      if ( session && Date.now() < session.expires ) {
+        return user( session.id );
+      }
+    } )
+    .then( ( data ) => {
+      if ( data && data.rows[ 0 ] ) {
+        request.session.user = data.rows[ 0 ];
+      } else {
+        return true;
+      }
+    } );
+};
+
+const trySignupSession = ( request ) => {
+  if ( ! request.cookie[ 'signup-session' ] ) {
+    return;
+  }
+
+  return query( 'SELECT username, sex, expires FROM "signup-sessions" WHERE session = $1;', [
+    request.cookie[ 'signup-session' ]
+  ] ).then( ( data ) => {
+    const session = data.rows[ 0 ];
+
+    if ( session && Date.now() < session.expires ) {
+      request.session.username = session.username;
+      request.session.sex = session.sex;
+    }
+  } );
+};
+
+module.exports = ( request, response, next ) => {
   request.session = {};
 
-  return new Promise( ( resolve, reject ) => {
-    if ( request.cookie.sessionid && request.cookie.userid ) {
-      resolve( read( './data/users.json' ) );
-    } else {
-      reject( 1 );
-    }
-  } )
-    .then( ( users ) => {
-      users = taffy( JSON.parse( users ) );
+  if ( ! request.cookie[ 'user-session' ] && ! request.cookie[ 'signup-session' ] ) {
+    return next();
+  }
 
-      var user = users( {
-        sessions: {
-          has: request.cookie.sessionid
-        },
-
-        id: request.cookie.userid,
-      } ).first();
-
-      if ( user ) {
-        request.session.user = user;
+  tryUserSession( request )
+    .then( ( fail ) => {
+      if ( fail ) {
+        return trySignupSession( request );
       }
-
-      next();
     } )
-    .catch( ( error ) => {
-      if ( error !== 1 ) {
-        throw error;
-      }
-
+    .then( () => {
       next();
     } );
 };

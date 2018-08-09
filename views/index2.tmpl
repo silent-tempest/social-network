@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="column-xl-8">
+    <h1 class="center-align">SOCIAL NETWORK</h1>
+  </div>
+  <div class="column-xl-4 column-lg-12 column-md-6 offset-md-3 column-sm-10 offset-sm-1 column--no-padding">
+    <div class="column-xl-12 column-lg-6">
+      <form class="card" id="login" action="/login" method="POST">
+        <h3>Вход</h3>
+        <%= this.include( './partials/input-username', { name: 'username', id: 'login-username', dark: true } ) %>
+        <%= this.include( './partials/input-password', { name: 'password', id: 'login-password', dark: true } ) %>
+        <div class="right-align">
+          <button class="flat-button" name="submit" type="submit">войти</button>
+        </div>
+      </form>
+    </div>
+    <div class="column-xl-12 column-lg-6">
+      <form class="card" id="signup" action="/signup?step=1" method="POST">
+        <h3>Регистрация</h3>
+        <%= this.include( './partials/input-username', { name: 'username', id: 'signup-username', dark: true } ) %>
+        <select name="sex">
+          <option value="M">Мальчик</option>
+          <option value="F">Девочка</option>
+        </select>
+        <div class="right-align">
+          <button class="flat-button" name="submit" type="submit">продолжить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,22 +1,22 @@
 'use strict';
 
-var Route = require( '../lib/Route' );
-var read  = require( '../read' );
-var mime  = require( 'mime' );
-var path  = require( 'path' );
+const Route = require( '../lib/Route' );
+const read  = require( '../read' );
+const mime  = require( 'mime' );
+const path  = require( 'path' );
 
-module.exports = function ( folder ) {
+module.exports = ( folder ) => {
 
   // listen only paths with extensions
 
-  return new Route( /\.[a-z]+$/i ).all( function ( request, response, next ) {
+  return new Route( /\.[a-z]+$/i ).all( ( request, response, next ) => {
     if ( request.method !== 'GET' && request.method !== 'HEAD' ) {
       return next();
     }
 
     return read( path.join( folder, request.url ) )
       .then( function ( data ) {
-        var type = mime.getType( request.url );
+        const type = mime.getType( request.url );
 
         if ( type ) {
           response.setHeader( 'Content-Type', type );
@@ -30,7 +30,7 @@ module.exports = function ( folder ) {
           throw error;
         }
 
-        return next();
+        next();
       } );
   } );
 };

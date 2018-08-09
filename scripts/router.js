@@ -1,12 +1,23 @@
 'use strict';
 
-var Router = require( './lib/Router' );
+const Router = require( './lib/Router' );
 
-var router = new Router()
-  .use( require( './middleware/initialize' ) )
+const router = new Router()
+  .set( 'view-engine', require( './engine' ) )
   .use( require( './middleware/parse-query' ) )
-  .use( require( './middleware/security' ) )
-  .use( require( './lib/static' )( 'static', rstatic ) )
+  // .use( require( './middleware/security' ) )
+  .use( require( 'helmet' )( {
+    frameguard: {
+      action: 'deny'
+    },
+
+    contentSecurityPolicy: {
+      directives: {
+        'default-src': [ "'self'" ]
+      }
+    }
+  } ) )
+  .use( require( './lib/static' )( 'static' ) )
   .use( require( './middleware/redirect' ) )
   .use( require( './middleware/parse-body' ) )
   .use( require( './middleware/parse-cookie' ) )
@@ -17,5 +28,9 @@ var router = new Router()
   .use( require( './routes/wrong' ) )
   .use( require( './routes/login' ) )
   .use( require( './routes/user' ) );
+
+router.all( '*', ( request, response ) => {
+  response.redirect( '/wrong?status=404&message=not found' );
+} );
 
 module.exports = router;

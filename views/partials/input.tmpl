@@ -1,0 +1,29 @@
+<% var _class = data.type === 'password'
+  ? 'input__native input__native--password'
+  : 'input__native';
+
+var attributes = 'attributes' in data
+  ? data.attributes
+  : [];
+
+attributes.push.apply( attributes, [
+  [ 'class', _class ],
+  [ 'type', data.type ],
+  [ 'name', data.name ],
+  [ 'id',  data.id ],
+  [ 'data-helper', 'for-' + data.id ]
+] );
+
+attributes = attributes.map( function ( entry ) {
+  return entry[ 0 ] + '="' + entry[ 1 ] + '"';
+} ); %>
+
+<div class="input--group<%= data.dark ? ' dark' : '' %>">
+  <input <%= attributes.join( ' ' ) %> />
+  <label class="input__label" for="<%= data.id %>"><%= data.label %></label>
+  <% if ( 'helper' in data ) { %>
+    <span class="input__helper" id="for-<%= data.id %>"><%= data.helper %></span>
+  <% } %>
+  <hr class="input__highlight-static" />
+  <hr class="input__highlight" />
+</div>

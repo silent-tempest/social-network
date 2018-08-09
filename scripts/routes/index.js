@@ -1,36 +1,22 @@
 'use strict';
 
-var constants = require( '../constants' ),
-    layout    = require( '../layout' ),
-    Route     = require( '../lib/Route' ),
-    user      = require( '../find-user' );
+const Route  = require( '../lib/Route');
+const engine = require( '../engine' );
 
-module.exports = new Route( '/' ).get( function ( req, res ) {
-  return user( req.cookie, true )
-    .then( function ( user ) {
-      res.redirect( '/user/' + ( user.alias || user.id ) + '/' );
-    } )
-    .catch( function ( error ) {
-      if ( error !== constants.NO_USER ) {
-        throw error;
-      }
+module.exports = new Route( '/' ).get( ( request, response ) => {
+  if ( request.session.user ) {
+    return response.redirect( `/user/${request.session.user.id}/` );
+  }
 
-      res.writeHead( 200, {
-        'Content-Type': 'text/html'
-      } );
+  if ( request.session.username ) {
+    return response.redirect( '/signup/' );
+  }
 
-      var head = [
-        layout.link( './dist/styles/index.bundle.min.css' )
-      ];
+  response.statusCode = 200;
 
-      var body = [
-        layout.script( './dist/scripts/index.bundle.min.js' )
-      ];
-
-      res.end( layout.render( 'index', null, head, body ) );
-    } )
-    .catch( function ( error ) {
-      console.log( error );
-      res.redirect( '/wrong/?status=500&message=something went wrong' );
-    } );
+  response.render( 'index2', {
+    page: 'index',
+    head: [ engine.link( './dist/styles/index2.bundle.min.css' ) ],
+    body: [ engine.script( './dist/scripts/index2.bundle.min.js' ) ]
+  } );
 } );

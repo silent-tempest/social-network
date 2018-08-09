@@ -1,100 +1,116 @@
 'use strict';
 
-var crypto = require( 'crypto' );
-var fs     = require( 'fs' );
-var Route  = require( '../lib/Route' );
+const Route = require( '../lib/Route' );
+const { query } = require( '../database' );
+const engine = require( '../engine' );
+const verifyUsername = require( './lib/verify-username' );
+const verifyPassword = require( './lib/verify-password' );
+const hash2 = require( '../hash2' );
+const login = require( './lib/login' );
 
-module.exports = new Route( '/signup' ).post( function ( req, res ) {
-  var username = req.body.username,
-      password = req.body.password;
+module.exports = new Route( '/signup' );
 
-  var users, gender, salt, id;
+const step0 = ( request ) => {
+  const message = verifyUsername( request.body.username );
 
-  // hackers trying to make something bad LOL
-
-  if ( typeof username === 'undefined' || typeof password === 'undefined' ) {
-    return res.end();
+  if ( message ) {
+    return Promise.resolve( { status: 400, message } );
   }
 
-  username = username.trim();
-
-  // validate the input
-
-  if ( username.length < 2 ) {
-    badInput( '#username', 'The username must be at least 2 characters' );
-  } else if ( username.length > 16 ) {
-    badInput( '#username', 'The length of the username cannot exceed 16 characters' );
-  } else if ( ! /^[\w\- ]+$/.test( username ) ) {
-    badInput( '#username', 'The username must contain only letters (A-Z), digits (0-9), underscores, dashes, or spaces' );
-  } else if ( /^\d*$/.test( username ) ) {
-    badInput( '#username', 'The username must not consist of digits only' );
-  } else if ( ( users = JSON.parse( fs.readFileSync( './data/users.json', 'utf8' ) ) ).some( ( user ) => user.username === username ) ) {
-    badInput( '#username', 'The username is already taken, try another one.' );
-  } else if ( password.length < 6 ) {
-    badInput( '#password', 'The password must be at least 6 characters' );
-  } else if ( password.length > 32 ) {
-    badInput( '#password', 'The length of the password cannot exceed 32 characters' );
-  } else if ( ! /[0-9]/.test( password ) ) {
-    badInput( '#password', 'The password must contain at least one digit' );
-  } else if ( ! /[a-z]/.test( password ) ) {
-    badInput( '#password', 'The password must contain at least one lowercase character' );
-  } else if ( ! /[A-Z]/.test( password ) ) {
-    badInput( '#password', 'The password must contain at least one uppercase character' );
-  } else if ( password !== req.body.confirmedPassword ) {
-    badInput( '#password', 'The passwords do not match' );
-
-  // the input is valid, so create an account
-
-  } else {
-    if ( req.body.gender === 'female' || req.body.gender === 'male' ) {
-      gender = req.body.gender;
+  return query( 'SELECT FROM users WHERE username = $1;', [ request.body.username.trim() ] ).then( ( data ) => {
+    if ( data.rows.length ) {
+      return { status: 409, message: 'Это имя уже занято' };
     } else {
-      gender = 'unknown';
+      return { status: 200 };
+    }
+  } );
+};
+
+module.exports.post( ( request, response, next ) => {
+  if ( request.query.step === '0' ) {
+    step0( request ).then( ( data ) => {
+      response.statusCode = data.status;
+
+      if ( data.status !== 200 ) {
+        response.text( data.message );
+      } else {
+        response.text();
+      }
+    } );
+  } else if ( request.query.step === '1' ) {
+    step0( request )
+      .then( ( data ) => {
+        if ( data.status === 200 ) {
+          return hash2.bytes( 64 );
+        }
+
+        response.statusCode = data.status;
+        response.text( data.message );
+      } )
+      .then( ( session ) => {
+        if ( ! session ) {
+          return;
+        }
+
+        if ( request.body.sex !== 'F' && request.body.sex !== 'M' ) {
+          request.body.sex = null;
+        }
+
+        // Expires in one hour
+        const Expires = new Date( Date.now() + 1000 * 60 * 60 );
+
+        query( 'INSERT INTO "signup-sessions" ( username, sex, session, expires ) VALUES ( $1, $2, $3, $4 );', [
+          request.body.username.trim(), request.body.sex, session, Expires.toISOString()
+        ] ).then( () => {
+          response.cookie( 'signup-session', session, { Expires } );
+          response.redirect( '/signup/' );
+        } );
+      } );
+  } else if ( request.query.step === '2' && request.session.username ) {
+    const message = verifyPassword( request.body.password, request.body.confirmedPassword ) ||
+      request.body.password !== request.body.confirmedPassword && 'Пароли не совпадают';
+
+    if ( message ) {
+      response.statusCode = 400; // bad request
+      response.text( message );
+      return;
     }
 
-    // create a salt (random hex string)
-
-    salt = crypto
-      .randomBytes( 16 )
-      .toString( 'hex' );
-
-    // create a hash using the salt
-
-    password = crypto
-      .createHmac( 'sha512', salt )
-      .update( password )
-      .digest( 'hex' );
-
-    id = '' + users.length;
-
-    users.push( {
-      username,
-      password,
-      sessions: [],
-      gender,
-      salt,
-      id
-    } );
-
-    fs.writeFileSync( './data/users.json', JSON.stringify( users, null, 2 ) );
-
-    res.writeHead( 200, {
-      'Content-Type': 'application/json'
-    } );
-
-    res.end( JSON.stringify( {
-      username,
-      url: `/user/${id}/`
-    } ) );
+    query( 'DELETE FROM "signup-sessions" WHERE session = $1;', [ request.cookie[ 'signup-session' ] ] )
+      .then( () => {
+        response.cookie( 'signup-session', '', { MaxAge: 0 } );
+        return hash2.create( request.body.password );
+      } )
+      .then( ( data ) => {
+        return query( 'INSERT INTO users ( username, password, secret, salt, sex ) VALUES ( $1, $2, $3, $4, $5 );', [
+          request.session.username,
+          data.password,
+          data.secret,
+          data.salt,
+          request.session.sex
+        ] );
+      } )
+      .then( () => {
+        return login( request.session.username, request.body.password, response );
+      } )
+      .then( ( user ) => {
+        response.redirect( `/user/${user.id}/` );
+      } );
+  } else {
+    next();
   }
+} );
 
-  function badInput ( selector, message ) {
-
-    res.writeHead( 400, {
-      'Content-Type': 'application/json'
+module.exports.get( ( request, response ) => {
+  if ( request.session.username ) {
+    response.statusCode = 200; // ok
+    response.render( 'signup2', {
+      username: request.session.username,
+      title: 'finishing',
+      head: [ engine.link( '../dist/styles/signup2.bundle.min.css' ) ],
+      body: [ engine.script( '../dist/scripts/signup2.bundle.min.js' ) ]
     } );
-
-    res.end( JSON.stringify( { message, selector } ) );
-
+  } else {
+    response.redirect( '/' );
   }
 } );

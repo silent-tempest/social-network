@@ -1,0 +1,22 @@
+@import './palette';
+
+body {
+  background: $accent;
+  font: 400 16px Ubuntu, Helvetica, Roboto, Ariel, sans-serif;
+  color: white;
+  padding-top: 56px;
+}
+
+@each $value in 'right' 'center' {
+  .#{$value}-align {
+    text-align: #{$value};
+  }
+}
+
+.top-app-bar {
+  position: fixed;
+  height: 56px;
+  right: 0;
+  left: 0;
+  top: 0;
+}

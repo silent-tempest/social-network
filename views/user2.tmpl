@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="column-4 column--no-padding">
+    <div class="column-12">
+      <div class="card">
+        <div class="avatar" style="background-image: none;"></div>
+        <% if ( ! data.loggedAs ) { %>
+          <p>Чтобы написать этому пользователю <a href="/?redirect=/user/<%= data.user.alias || data.user.id %>/">войдите</a> или <a href="/">зарегистируйтесь</a>.</p>
+        <% } else if ( data.loggedAs.id === data.user.id ) { %>
+          <p>Это ваш профиль.</p>
+        <% } else { %>
+          <button class="flat-button dark">написать</button>
+          <button class="flat-button dark">добавить в друзья</button>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <div class="column-8 column--no-padding">
+    <div class="column-12">
+      <div class="card">
+        <h2 style="display: inline-block;"><%- data.user.username %></h2>
+        <p style="display: inline-block; float: right;"><span style="<%= data.active ? 'border-bottom: 2px solid lime;' : 'border-bottom: 2px solid red;' %>"><%= data.active ? 'онлайн' : 'офлайн' %></span></p>
+        <p class="status"><%= data.status %></p>
+      </div>
+    </div>
+  </div>
+</div>

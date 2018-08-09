@@ -1,10 +1,10 @@
 {
   "name": "social-network",
   "version": "0.0.1",
-  "description": "A social network.",
-  "main": "server.js",
+  "description": "My social network without any frameworks, express.",
+  "main": "index.js",
   "scripts": {
-    "start": "make lint && node server"
+    "start": "make lint && node index"
   },
   "repository": {
     "type": "git",
@@ -17,22 +17,19 @@
   },
   "homepage": "https://github.com/silent-tempest/social-network#readme",
   "dependencies": {
+    "helmet": "^3.13.0",
     "mime": "^2.3.1",
-    "peako": "^0.0.4",
-    "qs": "^6.5.2",
-    "taffy": "^2.6.2"
+    "peako": "^0.0.5",
+    "pg": "^7.4.3",
+    "qs": "^6.5.2"
   },
   "devDependencies": {
-    "@material/button": "^0.37.1",
-    "@material/textfield": "^0.37.1",
-    "@material/typography": "^0.37.1",
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
-    "babelify": "^8.0.0",
     "browserify": "^16.2.2",
+    "browserify-optional": "^1.0.1",
     "jshint": "^2.9.5",
-    "layout-grid": "^0.0.1",
     "node-sass": "^4.9.2",
+    "node-sass-once-importer": "^5.2.0",
+    "risetto": "^0.0.1",
     "uglify-es": "^3.3.9"
   }
 }

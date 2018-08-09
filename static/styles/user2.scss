@@ -1,0 +1,16 @@
+@import 'risetto/index.sass';
+@import '@components/layout-grid/index.sass';
+@import '@components/button/flat-button';
+@import './lib/basic';
+@import './lib/card';
+
+.avatar {
+  background: no-repeat center / cover darken( white, 10% );
+  height: 300px;
+  margin-bottom: 24px;
+}
+
+.flat-button {
+  @include flat-button-background( white );
+  @include flat-button-color( white );
+}

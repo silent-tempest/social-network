@@ -1,0 +1,15 @@
+<%= this.include( './partials/input', {
+  attributes: [
+    [ 'maxlength', '32' ],
+    [ 'required',  '' ],
+    [ 'pattern', '^[a-z.]+@[a-z]+\.[a-z]+$' ],
+    [ 'title', 'пожалуйста, введите правильный email' ],
+    [ 'data-type', 'email' ]
+  ],
+  helper: '',
+  type:  'email',
+  label: data.label || 'Email',
+  dark:  data.dark,
+  name:  data.name,
+  id:    data.id
+} ) %>

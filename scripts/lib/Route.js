@@ -17,7 +17,7 @@ function Route ( path ) {
 
         _params.push( name );
 
-        return '([^/]+?)';
+        return '([^/]+)';
 
       } );
 
@@ -40,8 +40,12 @@ Route.prototype = {
   _handle: function _handle ( request, response, next, error, _argslen ) {
     var handler = this._handlers.ALL || this._handlers[ request.method ];
 
-    if ( _argslen ) {
+    if ( handler.length === 4 ) {
       return handler( error, request, response, next );
+    }
+
+    if ( _argslen ) {
+      return next( error );
     }
 
     return handler( request, response, next );
@@ -64,10 +68,6 @@ Route.prototype = {
 
     if ( this._params.length ) {
       match = this._pattern.exec( request.url );
-
-      if ( ! match ) {
-        console.log( '\n', ( this._pattern$ || this._pattern ).test( request.url ), this._pattern, request.url, this._params, '\n' );
-      }
 
       for ( i = 0, l = this._params.length; i < l; ++i ) {
         request.params[ this._params[ i ] ] = match[ i + 1 ];
@@ -95,7 +95,7 @@ require( './methods' ).concat( 'ALL' ).forEach( function ( method ) {
     }
 
     if ( this._handlers[ method ] || arguments.length > 1 ) {
-      throw Error( 'multiple method handlers not implemented' );
+      throw Error( 'multiple method handlers not implemented. use another route for this' );
     }
 
     if ( this._handlers.ALL ) {

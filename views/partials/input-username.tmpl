@@ -1,0 +1,16 @@
+<%= this.include( './partials/input', {
+  attributes: [
+    [ 'maxlength', '16' ],
+    [ 'minlength', '2' ],
+    [ 'required',  '' ],
+    [ 'pattern', '^(?=.*[^0-9])(?:[\\wа-яёА-ЯЁ -]+).*$' ],
+    [ 'title', 'имя может содержать только английские и русские буквы, цифры (не может содержать только цифры), дефисы, и подчеркивания' ],
+    [ 'data-type', 'username' ]
+  ],
+  helper: '',
+  type:  'text',
+  label: data.label ||'Имя',
+  dark:  data.dark,
+  name:  data.name,
+  id:    data.id
+} ) %>
