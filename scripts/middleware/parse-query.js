@@ -2,8 +2,10 @@
 
 const parse = require( 'qs/lib/parse' );
 
-module.exports = ( request, response, next ) => {
+const parseQuery = ( request, response, next ) => {
   const match = /\?(.*)$/.exec( request.url );
+
+  request.rawUrl = request.url;
 
   if ( match ) {
     request.query = parse( request.rawQuery = match[ 1 ] );
@@ -15,3 +17,5 @@ module.exports = ( request, response, next ) => {
 
   next();
 };
+
+module.exports = parseQuery;

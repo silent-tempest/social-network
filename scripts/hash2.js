@@ -6,6 +6,7 @@ const { randomBytes, pbkdf2 } = require( 'crypto' );
 const ITERATIONS = 1e6;
 const KEYLEN = 64;
 const DIGEST = 'sha512';
+const ENCODING = 'hex';
 
 exports.bytes = ( number ) => {
   return new Promise( ( resolve, reject ) => {
@@ -13,7 +14,7 @@ exports.bytes = ( number ) => {
       if ( error ) {
         reject( error );
       } else {
-        resolve( bytes.toString( 'hex' ) );
+        resolve( bytes.toString( ENCODING ) );
       }
     } );
   } );
@@ -43,7 +44,7 @@ const hash = ( password, secret, salt ) => {
       if ( error ) {
         reject( error );
       } else {
-        resolve( password.toString( 'hex' ) );
+        resolve( password.toString( ENCODING ) );
       }
     } );
   } );

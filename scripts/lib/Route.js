@@ -1,3 +1,5 @@
+/* jshint esversion: 5 */
+
 'use strict';
 
 var toString = Object.prototype.toString;
@@ -29,7 +31,7 @@ function Route ( path ) {
   } else if ( path instanceof RegExp ) {
     this._pattern = path;
   } else {
-    throw TypeError( 'expected a string or regexp, but got ' + Object.prototype.toString.call( path ) );
+    throw TypeError( 'expected a string or regexp, but got ' + toString.call( path ) );
   }
 
   this._handlers = {};
@@ -40,15 +42,21 @@ Route.prototype = {
   _handle: function _handle ( request, response, next, error, _argslen ) {
     var handler = this._handlers.ALL || this._handlers[ request.method ];
 
-    if ( handler.length === 4 ) {
-      return handler( error, request, response, next );
-    }
-
+    // 'next' called with an error
     if ( _argslen ) {
-      return next( error );
-    }
+      // only error handlers can handle an error
+      if ( handler.length >= 4 ) {
+        handler( error, request, response, next );
 
-    return handler( request, response, next );
+      // pass an error to closest error handler
+      } else {
+        next( error );
+      }
+
+    // error handlers cannot handle 'next' without an error
+    } else if ( handler.length < 4 ) {
+      handler( request, response, next );
+    }
   },
 
   _handles: function _handles ( request ) {

@@ -10,8 +10,8 @@
 SCRIPTS_DIST := static/dist/scripts
 SCRIPTS      := static/scripts
 
-lint-%:
-	node_modules/.bin/jshint --verbose --config static/.jshintrc $(SCRIPTS)/$*
+lint--static:
+	node_modules/.bin/jshint --verbose --config static/.jshintrc $(SCRIPTS)
 
 lint:
 	node_modules/.bin/jshint --verbose .
@@ -21,7 +21,7 @@ script-%--min:
 	node_modules/.bin/uglifyjs -o $(SCRIPTS_DIST)/$(subst .js,.bundle.min.js,$*) $(SCRIPTS_DIST)/$(subst .js,.bundle.min.js,$*) -mc
 
 script-%:
-	@make --no-print-directory lint-$*
+	@make --no-print-directory lint--static
 	node_modules/.bin/browserify -o $(SCRIPTS_DIST)/$(subst .js,.bundle.min.js,$*) $(SCRIPTS)/$* -x qs
 
 STYLES_DIST := static/dist/styles

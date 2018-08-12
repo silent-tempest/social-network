@@ -1,0 +1,8 @@
+<div class="message">
+  <% if ( data.message[ 'author-id' ] === data.data.loggedAs.id ) {
+    print( 'Вы' );
+  } else {
+    print( data.data.users[ data.message[ 'author-id' ] ].username );
+  } %>:
+  <%= data.message.contents %>
+</div>

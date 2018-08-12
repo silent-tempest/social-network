@@ -41,7 +41,7 @@ const trySignupSession = ( request ) => {
   } );
 };
 
-module.exports = ( request, response, next ) => {
+const createSession = ( request, response, next ) => {
   request.session = {};
 
   if ( ! request.cookie[ 'user-session' ] && ! request.cookie[ 'signup-session' ] ) {
@@ -58,3 +58,5 @@ module.exports = ( request, response, next ) => {
       next();
     } );
 };
+
+module.exports = createSession;

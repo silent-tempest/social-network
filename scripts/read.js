@@ -1,18 +1,23 @@
 'use strict';
 
-var fs = require( 'fs' );
+const fs = require( 'fs' );
 
-// read( './data/users.json' )
-//   .then( ( users ) => JSON.parse( users ) );
-
-module.exports = function read ( url ) {
-  return new Promise( function ( rs, rj ) {
-    fs.readFile( url, function ( e, d ) {
-      if ( e ) {
-        rj( e );
+/**
+ * Promisified fs.readFile.
+ * @param {string} path
+ * @param {string?} [encoding=null]
+ * @returns {Promise<Buffer>}
+ */
+const read = ( path, encoding = null ) => {
+  return new Promise( ( resolve, reject ) => {
+    fs.readFile( path, encoding, ( error, data ) => {
+      if ( error ) {
+        reject( error );
       } else {
-        rs( d );
+        resolve( data );
       }
     } );
   } );
 };
+
+module.exports = read;

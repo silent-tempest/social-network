@@ -4,10 +4,14 @@
 @import './lib/basic';
 @import './lib/card';
 
-.avatar {
+.user--avatar {
   background: no-repeat center / cover darken( white, 10% );
   height: 300px;
   margin-bottom: 24px;
+}
+
+.user--username {
+  display: inline-block;
 }
 
 .flat-button {

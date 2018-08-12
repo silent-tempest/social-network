@@ -1,11 +1,14 @@
 'use strict';
 
 const parse = require( 'qs/lib/parse' );
-const Route = require( '../lib/Route' );
 
-module.exports = new Route( '*' ).post( ( request, response, next ) => {
+const parseBody = ( request, response, next ) => {
   request.rawBody = Buffer( 0 );
   request.body    = '';
+
+  if ( request.method !== 'POST' ) {
+    return next();
+  }
 
   const length = request.headers[ 'content-length' ];
 
@@ -59,4 +62,6 @@ module.exports = new Route( '*' ).post( ( request, response, next ) => {
       chunks.push( chunk );
     }
   } );
-} );
+};
+
+module.exports = parseBody;

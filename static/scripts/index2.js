@@ -18,8 +18,10 @@ var headers = {
 (function () {
   var username = document.forms.login.elements.username;
   var password = document.forms.login.elements.password;
-  var uhelper  = document.getElementById(username.dataset.helper);
-  var phelper  = document.getElementById(password.dataset.helper);
+  var helper = {
+    username: document.getElementById(username.dataset.helper),
+    password: document.getElementById(password.dataset.helper)
+  };
   var disabled;
 
   function listener() {
@@ -28,20 +30,17 @@ var headers = {
       password: password.value
     };
 
-    var message = verify_username(data.username) || verify_password(data.password);
-
-    if (message) {
-      success(message);
-    }
+    success({ field: 'username', message: verify_username(data.username) || null });
+    success({ field: 'password', message: verify_password(data.password) || null });
   }
 
-  function success(message) {
+  function success(data) {
     // jshint validthis: true
-    if (message !== null && (!this || this.status !== 200)) {
-      helper.innerHTML = message || this.status + ': ' + this.statusText;
+    if (data.message !== null && (!this || this.status !== 200)) {
+      helper[data.field].innerHTML = data.message || this.status + ': ' + this.statusText;
       toggle(true);
     } else {
-      helper.innerHTML = '';
+      helper[data.field].innerHTML = '';
       toggle(false);
     }
     // jshint validthis: false
@@ -53,7 +52,7 @@ var headers = {
 
   toggle(true);
 
-  document.forms.signup.addEventListener('submit', function onsubmit(event) {
+  document.forms.login.addEventListener('submit', function onsubmit(event) {
     if (disabled) {
       event.preventDefault();
     }
@@ -61,6 +60,8 @@ var headers = {
 
   username.addEventListener('change', listener, false);
   username.addEventListener('input', listener, false);
+  password.addEventListener('change', listener, false);
+  password.addEventListener('input', listener, false);
 })();
 
 (function () {
@@ -91,7 +92,8 @@ var headers = {
     }
   }
 
-  function success(message) {
+  function success(message, object) {
+    console.log('success', message, object);
     // jshint validthis: true
     if (message !== null && (!this || this.status !== 200)) {
       helper.innerHTML = message || this.status + ': ' + this.statusText;

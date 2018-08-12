@@ -1,21 +1,22 @@
 'use strict';
 
-const Route = require( '../lib/Route' );
-const read  = require( '../read' );
-const mime  = require( 'mime' );
-const path  = require( 'path' );
+const Route       = require( '../lib/Route' );
+const read        = require( '../read' );
+const mime        = require( 'mime' );
+const { join }    = require( 'path' );
 
-module.exports = ( folder ) => {
+module.exports = ( folder, options ) => {
+  const path = options && options.all
+    ? '*'
+    : /\.[a-z]+$/i;
 
-  // listen only paths with extensions
-
-  return new Route( /\.[a-z]+$/i ).all( ( request, response, next ) => {
+  return new Route( path ).all( ( request, response, next ) => {
     if ( request.method !== 'GET' && request.method !== 'HEAD' ) {
       return next();
     }
 
-    return read( path.join( folder, request.url ) )
-      .then( function ( data ) {
+    read( join( folder, request.url ) )
+      .then( ( data ) => {
         const type = mime.getType( request.url );
 
         if ( type ) {
@@ -25,7 +26,7 @@ module.exports = ( folder ) => {
         response.statusCode = 200;
         response.end( data );
       } )
-      .catch( function ( error ) {
+      .catch( ( error ) => {
         if ( error.code !== 'EISDIR' && error.code !== 'ENOENT' ) {
           throw error;
         }

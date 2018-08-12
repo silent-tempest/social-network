@@ -3,7 +3,6 @@
 const milliseconds = require( './milliseconds' );
 
 // serializeCookie( 'signup-session', session, { MaxAge: '1 hour' } );
-// serializeCookie( 'user-session', session, { MaxAge: '365 days' } );
 // serializeCookie( 'user-session', session, { MaxAge: 365 * 24 * 60 * 60 } );
 
 module.exports = ( key, value, options ) => {
@@ -20,7 +19,7 @@ module.exports = ( key, value, options ) => {
       Expires = options.Expires;
     }
 
-    result += '; Expires=' + Expires.toGMTString() + '; MaxAge=' + MaxAge * 0.001;
+    result += '; Expires=' + Expires.toGMTString() + '; Max-Age=' + MaxAge * 0.001;
   }
 
   if ( typeof options.HttpOnly === 'undefined' || options.HttpOnly ) {
