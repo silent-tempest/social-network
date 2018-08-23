@@ -1,6 +1,6 @@
-@import 'risetto/index.sass';
-@import '@components/layout-grid/index.sass';
-@import '@components/button/flat-button';
+@import './lib/reset.sass';
+@import 'waft.layout-grid/index.sass';
+@import 'waft.button/flat-button';
 @import './lib/basic';
 @import './lib/card';
 
