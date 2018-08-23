@@ -41,12 +41,12 @@ make script-index.js--min
 make script-index.js
 ```
 
-* Bundle and compress `static/styles/index.scss` into `static/dist/styles/index.bundle.min.scss`:
+* Bundle and compress `static/styles/index.scss` into `static/dist/styles/index.bundle.min.css`:
 ```sh
 make style-index.scss--min
 ```
 
-* Bundle `static/styles/index.scss` into `static/dist/styles/index.bundle.min.scss`:
+* Bundle `static/styles/index.scss` into `static/dist/styles/index.bundle.min.css`:
 ```sh
 make style-index.scss
 ```
