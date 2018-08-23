@@ -1,9 +1,5 @@
-/**
- * post-id | liker-id
- */
+\connect social_network
 
-\connect "social-network"
-
-CREATE TABLE IF NOT EXISTS "post-likes" (
-  "post-id" INT NOT NULL,
-  "liker-id" INT NOT NULL );
+CREATE TABLE IF NOT EXISTS post_likes (
+  postId INT NOT NULL,
+  likerId INT NOT NULL );

@@ -1,10 +1,6 @@
-/**
- * username | sex | session | expires
- */
+\connect social_network
 
-\connect "social-network"
-
-CREATE TABLE IF NOT EXISTS "signup-sessions" (
+CREATE TABLE IF NOT EXISTS signup_sessions (
   username VARCHAR( 16 ) NOT NULL,
   sex CHAR( 1 ),
   session CHAR( 128 ) NOT NULL,

@@ -5,7 +5,7 @@
     "top"
   ],
   "browserify": true,
-  "esversion": 6,
+  "esversion": 3,
   "browser": true,
   "strict": "global",
   "shadow": true,

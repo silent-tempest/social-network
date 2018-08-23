@@ -2,18 +2,12 @@
 
 'use strict';
 
-var initialize = require( '../middleware/initialize' );
-var response   = require( './response' );
-var request    = require( './request' );
-var Route      = require( './Route' );
+var Response = require( './Response' );
+var Route    = require( './Route' );
 
 function Router () {
   this.routes   = [];
   this.settings = {};
-  this.response = Object.create( response );
-  this.request  = Object.create( request );
-  this.request.router = this.response.router = this;
-  this.use( initialize( this ) );
 }
 
 Router.prototype = {
@@ -43,6 +37,8 @@ Router.prototype = {
   handle: function handle ( request, response ) {
     var self  = this;
     var index = 0;
+
+    Response.update( this, request, response );
 
     function next ( error ) {
       var length = self.routes.length;

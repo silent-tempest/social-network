@@ -24,10 +24,10 @@ module.exports = ( username, password, response ) => {
     .then( ( session ) => {
       const Expires = new Date( Date.now() + 1000 * 60 * 60 * 24 * 365 );
 
-      return query( 'INSERT INTO "user-sessions" ( id, session, expires ) VALUES ( $1, $2, $3 )', [
+      return query( 'INSERT INTO user_sessions ( id, session, expires ) VALUES ( $1, $2, $3 )', [
         user.id, session, Expires.toUTCString()
       ] ).then( () => {
-        response.cookie( 'user-session', session, { Expires } );
+        response.cookie( 'u_id', session, { Path: '/', Expires } );
 
         return {
           alias: user.alias,

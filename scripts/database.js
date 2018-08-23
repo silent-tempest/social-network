@@ -2,7 +2,7 @@
 
 const { Client } = require( 'pg' );
 const escape = require( 'peako/escape' );
-const config = require( '../config/pg' );
+const config = require( '../config' ).pg;
 
 exports.client = new Client( config );
 exports.client.connect();
@@ -24,5 +24,5 @@ exports.user = ( id, maybeUser ) => {
     return Promise.resolve( { rows: [ maybeUser ] } );
   }
 
-  return exports.query( `SELECT id, username, active, status, alias, sex FROM users WHERE ${key} = $1;`, [ id ] );
+  return exports.query( `SELECT id, username, lastSeen, active, status, alias, sex FROM users WHERE ${key} = $1;`, [ id ] );
 };

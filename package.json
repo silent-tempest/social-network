@@ -1,28 +1,22 @@
 {
   "name": "social-network",
-  "version": "0.0.1",
-  "description": "My social network without any frameworks, express.",
-  "main": "index2.js",
-  "scripts": {
-    "start": "make lint && node index"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/silent-tempest/social-network.git"
-  },
-  "author": "SILENT",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/silent-tempest/social-network/issues"
-  },
-  "homepage": "https://github.com/silent-tempest/social-network#readme",
+  "version": "1.0.0",
+  "description": "",
   "dependencies": {
+    "@components/input": "file:///home/silent/git/lib/material-design-components/packages/input",
     "helmet": "^3.13.0",
+    "logical-error": "file:///home/silent/git/lib/logical-error",
     "mime": "^2.3.1",
-    "peako": "^0.0.5",
+    "network-error": "file:///home/silent/git/lib/network-error",
+    "peako": "file:peako-0.0.5.tgz",
     "pg": "^7.4.3",
     "qs": "^6.5.2",
-    "socket.io": "^2.1.1"
+    "safe-resolve-path": "file:///home/silent/git/lib/safe-resolve-path",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1",
+    "super-cookie": "file:///home/silent/git/lib/super-cookie",
+    "super-extend": "file:///home/silent/git/lib/super-extend",
+    "super-timeago": "file:///home/silent/git/lib/super-timeago"
   },
   "devDependencies": {
     "browserify": "^16.2.2",
@@ -30,7 +24,9 @@
     "jshint": "^2.9.5",
     "node-sass": "^4.9.2",
     "node-sass-once-importer": "^5.2.0",
-    "socket.io-client": "^2.1.1",
     "uglify-es": "^3.3.9"
-  }
+  },
+  "main": "index.js",
+  "author": "SILENT",
+  "license": "MIT"
 }

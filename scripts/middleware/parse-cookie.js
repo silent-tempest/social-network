@@ -1,17 +1,17 @@
 'use strict';
 
-var fromPairs = require( 'peako/from-pairs' );
+let parse = require( 'super-cookie/lib/parse' );
 
-function split ( pair ) {
-  return pair.split( '=' );
-}
-
-module.exports = function parseCookie ( request, response, next ) {
-  if ( request.headers.cookie ) {
-    request.cookie = fromPairs( request.headers.cookie.split( '; ' ).map( split ) );
-  } else {
-    request.cookie = {};
+function parseCookie ( request, response, next ) {
+  if ( ! request.cookie ) {
+    if ( request.headers.cookie ) {
+      request.cookie = parse( request.headers.cookie );
+    } else {
+      request.cookie = {};
+    }
   }
 
   next();
-};
+}
+
+module.exports = parseCookie;

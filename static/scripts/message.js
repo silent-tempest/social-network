@@ -1,27 +1,10 @@
 'use strict';
 
-if ( top !== self ) {
-  top.location = self.location;
-}
+var socket = require( 'socket.io-client' )( 'https://localhost:3000', {
+  query: 'socket=1',
+  path: '/message_socket'
+} );
 
-var ajax = require('peako/ajax');
-
-document.forms.message.addEventListener('submit', function onsubmit(event) {
-  event.preventDefault();
-
-  ajax(location.pathname, {
-    success: function success(message) {
-      document.getElementById( 'messages' ).innerHTML += message;
-    },
-
-    error: console.error,
-
-    headers: {
-      'Content-Type': 'application/json'
-    },
-
-    data: {
-      message: this.elements.message.value
-    }
-  });
-}, false);
+socket.on( 'connect', function () {
+  console.log( 'connected to the server' );
+} );

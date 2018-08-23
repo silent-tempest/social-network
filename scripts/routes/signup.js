@@ -29,12 +29,12 @@ const step0 = ( request ) => {
 module.exports.post( ( request, response, next ) => {
   if ( request.query.step === '0' ) {
     step0( request ).then( ( data ) => {
-      response.statusCode = data.status;
+      response.status( data.status ).type( 'text' );
 
       if ( data.status !== 200 ) {
-        response.text( data.message );
+        response.end( data.message );
       } else {
-        response.text();
+        response.end();
       }
     } );
   } else if ( request.query.step === '1' ) {
@@ -44,8 +44,7 @@ module.exports.post( ( request, response, next ) => {
           return hash2.bytes( 64 );
         }
 
-        response.statusCode = data.status;
-        response.text( data.message );
+        response.status( data.status ).type( 'text' ).end( data.message );
       } )
       .then( ( session ) => {
         if ( ! session ) {
@@ -59,10 +58,10 @@ module.exports.post( ( request, response, next ) => {
         // Expires in one hour
         const Expires = new Date( Date.now() + 1000 * 60 * 60 );
 
-        query( 'INSERT INTO "signup-sessions" ( username, sex, session, expires ) VALUES ( $1, $2, $3, $4 );', [
+        query( 'INSERT INTO signup_sessions ( username, sex, session, expires ) VALUES ( $1, $2, $3, $4 );', [
           request.body.username.trim(), request.body.sex, session, Expires.toISOString()
         ] ).then( () => {
-          response.cookie( 'signup-session', session, { Expires } );
+          response.cookie( 's_id', session, { Path: '/', Expires } );
           response.redirect( '/signup/' );
         } );
       } );
@@ -71,14 +70,12 @@ module.exports.post( ( request, response, next ) => {
       request.body.password !== request.body.confirmedPassword && 'Пароли не совпадают';
 
     if ( message ) {
-      response.statusCode = 400; // bad request
-      response.text( message );
-      return;
+      return response.status( 400 ).type( 'text' ).end( message );
     }
 
-    query( 'DELETE FROM "signup-sessions" WHERE session = $1;', [ request.cookie[ 'signup-session' ] ] )
+    query( 'DELETE FROM signup_sessions WHERE session = $1;', [ request.cookie.s_id ] )
       .then( () => {
-        response.cookie( 'signup-session', '', { MaxAge: 0 } );
+        response.cookie( 's_id', '', { Path: '/', MaxAge: 0 } );
         return hash2.create( request.body.password );
       } )
       .then( ( data ) => {
@@ -103,8 +100,7 @@ module.exports.post( ( request, response, next ) => {
 
 module.exports.get( ( request, response ) => {
   if ( request.session.username ) {
-    response.statusCode = 200; // ok
-    response.render( 'signup2', {
+    response.status( 200 ).render( 'signup2', {
       username: request.session.username,
       title: 'finishing',
       head: [ engine.link( '../dist/styles/signup2.bundle.min.css' ) ],

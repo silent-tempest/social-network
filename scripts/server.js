@@ -1,6 +1,3 @@
 'use strict';
 
-const { createServer } = require( 'https' );
-const router = require( './router' );
-
-module.exports = createServer( require( '../config/ssl' ), router.handle.bind( router ) );
+module.exports = new ( require( 'https' ).Server )( require( '../config' ).ssl );

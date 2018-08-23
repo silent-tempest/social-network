@@ -12,9 +12,7 @@ module.exports = new Route( '/' ).get( ( request, response ) => {
     return response.redirect( '/signup/' );
   }
 
-  response.statusCode = 200;
-
-  response.render( 'index2', {
+  response.status( 200 ).render( 'index2', {
     page: 'index',
     head: [ engine.link( './dist/styles/index2.bundle.min.css' ) ],
     body: [ engine.script( './dist/scripts/index2.bundle.min.js' ) ]

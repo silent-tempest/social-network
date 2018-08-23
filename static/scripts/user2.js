@@ -4,8 +4,8 @@ if ( top !== self ) {
   top.location = self.location;
 }
 
-var format = require( './lib/mytimeago' );
-var locale = require( './lib/mytimeago__locale--ru' );
+var format = require( 'super-timeago' );
+var locale = require( 'super-timeago/locales/ru' );
 
 var UI = {
   init: function init () {

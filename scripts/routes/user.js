@@ -10,8 +10,7 @@ module.exports = new Route( '/user/:id' ).get( ( request, response, next ) => {
       return next();
     }
 
-    response.statusCode = 200; // ok
-    response.render( 'user2', {
+    response.status( 200 ).render( 'user2', {
       user: data.rows[ 0 ],
       head: [ engine.link( '../../dist/styles/user2.bundle.min.css' ) ],
       body: [ engine.script( '../../dist/scripts/user2.bundle.min.js' ) ],

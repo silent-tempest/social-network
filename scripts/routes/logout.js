@@ -5,17 +5,17 @@ const Route = require( '../lib/Route' );
 
 module.exports = new Route( '/logout' ).get( ( request, response ) => {
   if ( request.session.user ) {
-    query( 'DELETE FROM "user-sessions" WHERE id = $1 AND session = $2;', [
-      request.session.user.id, request.cookie[ 'user-session' ]
+    query( 'DELETE FROM user_sessions WHERE id = $1 AND session = $2;', [
+      request.session.user.id, request.cookie.u_id
     ] ).then( () => {
-      response.cookie( 'user-session', '', { MaxAge: 0 } );
+      response.cookie( 'u_id', '', { Path: '/', MaxAge: 0 } );
       response.redirect( '/' );
     } );
   } else if ( request.session.username ) {
-    query( 'DELETE FROM "signup-sessions" WHERE session = $1;', [
-      request.cookie[ 'signup-session' ]
+    query( 'DELETE FROM signup_sessions WHERE session = $1;', [
+      request.cookie.s_id
     ] ).then( () => {
-      response.cookie( 'signup-session', '', { MaxAge: 0 } );
+      response.cookie( 's_id', '', { Path: '/', MaxAge: 0 } );
       response.redirect( '/' );
     } );
   } else {

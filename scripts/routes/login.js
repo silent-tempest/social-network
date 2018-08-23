@@ -10,8 +10,7 @@ module.exports = new Route( '/login' ).post( ( request, response ) => {
 
   return login( request.body.username, request.body.password, response ).then( ( user ) => {
     if ( typeof user === 'string' ) {
-      response.statusCode = 400;
-      response.text( user );
+      response.status( 400 ).type( 'text' ).end( user );
     } else {
       response.redirect( `/user/${user.alias || user.id}/` );
     }

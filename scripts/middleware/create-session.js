@@ -1,13 +1,15 @@
+// todo refactor
+
 'use strict';
 
 const { query, user } = require( '../database' );
 
 const tryUserSession = ( request ) => {
-  if ( ! request.cookie[ 'user-session' ] ) {
+  if ( ! request.cookie.u_id ) {
     return Promise.resolve( true );
   }
 
-  return query( 'SELECT id, expires FROM "user-sessions" WHERE session = $1;', [ request.cookie[ 'user-session' ] ] )
+  return query( 'SELECT id, expires FROM user_sessions WHERE session = $1;', [ request.cookie.u_id ] )
     .then( ( data ) => {
       const session = data.rows[ 0 ];
 
@@ -25,12 +27,12 @@ const tryUserSession = ( request ) => {
 };
 
 const trySignupSession = ( request ) => {
-  if ( ! request.cookie[ 'signup-session' ] ) {
+  if ( ! request.cookie.s_id ) {
     return;
   }
 
-  return query( 'SELECT username, sex, expires FROM "signup-sessions" WHERE session = $1;', [
-    request.cookie[ 'signup-session' ]
+  return query( 'SELECT username, sex, expires FROM signup_sessions WHERE session = $1;', [
+    request.cookie.s_id
   ] ).then( ( data ) => {
     const session = data.rows[ 0 ];
 
@@ -42,9 +44,13 @@ const trySignupSession = ( request ) => {
 };
 
 const createSession = ( request, response, next ) => {
+  if ( request.session ) {
+    return next();
+  }
+
   request.session = {};
 
-  if ( ! request.cookie[ 'user-session' ] && ! request.cookie[ 'signup-session' ] ) {
+  if ( ! request.cookie.u_id && ! request.cookie.s_id ) {
     return next();
   }
 

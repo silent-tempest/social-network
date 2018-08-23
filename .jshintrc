@@ -14,5 +14,6 @@
   "noarg": true,
   "curly": true,
   "immed": true,
-  "node": true
+  "node": true,
+  "-W014": true
 }

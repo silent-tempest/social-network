@@ -1,37 +1,43 @@
 'use strict';
 
-const Route       = require( '../lib/Route' );
-const read        = require( '../read' );
-const mime        = require( 'mime' );
-const { join }    = require( 'path' );
+let Route   = require( '../lib/Route' );
+let resolve = require( 'safe-resolve-path' );
+let { lstat, access, createReadStream, F_OK } = require( 'fs' );
 
-module.exports = ( folder, options ) => {
-  const path = options && options.all
-    ? '*'
-    : /\.[a-z]+$/i;
+function handleError ( error, response ) {
+  if ( error ) {
+    if ( error.code === 'ENOENT' ) {
+      response.status( 404 ).end();
+    } else {
+      response.status( 500 ).end();
+    }
 
-  return new Route( path ).all( ( request, response, next ) => {
+    return true;
+  }
+}
+
+module.exports = ( folder, options = {} ) => {
+  return new Route( options.pattern || /\.[a-z]+$/i ).all( ( request, response, next ) => {
     if ( request.method !== 'GET' && request.method !== 'HEAD' ) {
       return next();
     }
 
-    read( join( folder, request.url ) )
-      .then( ( data ) => {
-        const type = mime.getType( request.url );
+    let path = resolve( folder, request.url );
 
-        if ( type ) {
-          response.setHeader( 'Content-Type', type );
+    if ( request.method === 'HEAD' ) {
+      lstat( path, ( error, stats ) => {
+        if ( ! handleError( error, response ) ) {
+          response.status( 200 ).type( path ).header( 'Content-Length', stats.size ).end();
         }
-
-        response.statusCode = 200;
-        response.end( data );
-      } )
-      .catch( ( error ) => {
-        if ( error.code !== 'EISDIR' && error.code !== 'ENOENT' ) {
-          throw error;
-        }
-
-        next();
       } );
+
+      return;
+    }
+
+    access( path, F_OK, ( error ) => {
+      if ( ! handleError( error, response ) ) {
+        createReadStream( path ).pipe( response.status( 200 ).type( path ) );
+      }
+    } );
   } );
 };

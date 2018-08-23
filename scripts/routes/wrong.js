@@ -3,6 +3,5 @@
 var Route = require( '../lib/Route' );
 
 module.exports = new Route( '/wrong' ).get( ( request, response ) => {
-  response.statusCode = 400; // bad request
-  response.render( 'wrong', request.query );
+  response.status( 400 ).render( 'wrong', request.query );
 } );

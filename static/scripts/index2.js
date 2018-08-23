@@ -12,7 +12,7 @@ var verify_username = require('../../scripts/routes/lib/verify-username');
 var verify_password = require('../../scripts/routes/lib/verify-password');
 
 var headers = {
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/x-www-form-urlencoded'
 };
 
 (function () {
@@ -92,8 +92,7 @@ var headers = {
     }
   }
 
-  function success(message, object) {
-    console.log('success', message, object);
+  function success(message) {
     // jshint validthis: true
     if (message !== null && (!this || this.status !== 200)) {
       helper.innerHTML = message || this.status + ': ' + this.statusText;
